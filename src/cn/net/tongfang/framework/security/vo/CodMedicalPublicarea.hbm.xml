@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2013-11-10 17:36:56 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="cn.net.tongfang.framework.security.vo.CodMedicalPublicarea" table="cod_medical_publicarea" schema="dbo">
+        <id name="id" type="long">
+            <column name="id" />
+            <generator class="identity"></generator>
+        </id>
+        <property name="orgname" type="string">
+            <column name="orgname" length="100" not-null="true" />
+        </property>
+        <property name="regaddress" type="string">
+            <column name="regaddress" length="100" not-null="true" />
+        </property>
+        <property name="startdate" type="java.sql.Timestamp">
+            <column name="startdate" length="23" not-null="true" />
+        </property>
+        <property name="enddate" type="java.sql.Timestamp">
+            <column name="enddate" length="23" not-null="true" />
+        </property>
+        <property name="legalman" type="string">
+            <column name="legalman" length="30" not-null="true" />
+        </property>
+        <property name="tel" type="string">
+            <column name="tel" length="30" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
