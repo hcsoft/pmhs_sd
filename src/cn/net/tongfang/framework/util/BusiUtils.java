@@ -2,10 +2,7 @@ package cn.net.tongfang.framework.util;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import org.hibernate.HibernateException;
@@ -55,7 +52,9 @@ public class BusiUtils {
 		}
 		return null;
 	}
-	
+	public static String format(Date d){
+		return sdf1.format(d);
+	}
 	public static Timestamp getChildAge() {
 
 		Calendar cal = Calendar.getInstance();

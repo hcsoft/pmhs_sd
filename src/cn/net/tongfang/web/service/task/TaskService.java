@@ -52,9 +52,8 @@ public class TaskService extends HibernateDaoSupport {
     }
 
     private static Map<String, Map<String, String>> queryParam = new HashMap();
-
+    private static Gson gs = new Gson();
     static {
-        Gson gs = new Gson();
         queryParam.put("name", gs.fromJson("{key:'hf.name',text:'姓名',opt:'like', sql:'\\'%?%\\'',type:'string',inlist:'true' }", Map.class));
         queryParam.put("fileno", gs.fromJson("{key:'info.fileNo',text:'档案编码',opt:'=' , sql:'\\'?\\'',type:'string',inlist:'true' }", Map.class));
         queryParam.put("idnumber", gs.fromJson("{key:'info.idnumber',text:'身份证号',opt:'=' , sql:'\\'?\\'',type:'string',inlist:'true' }", Map.class));
@@ -1499,7 +1498,6 @@ public class TaskService extends HibernateDaoSupport {
     //TODO 更新任务标志
     public Map updateTaskCompelte(String taskid) throws Exception {
         Map ret = new HashMap();
-        System.out.println("=========taskid============" + taskid);
         getHibernateTemplate().bulkUpdate(" update TaskLog set sendtime=getdate() ,status=2  where id = ? ", taskid);
         ret.put("success", true);
         return ret;
@@ -1518,10 +1516,6 @@ public class TaskService extends HibernateDaoSupport {
             if (key.endsWith("00")) {
                 id = key.substring(0, key.length() - 2);
             }
-            System.out.println("id==="+id);
-            System.out.println("=====================================");
-            System.out.println(new Gson().toJson(examUtil));
-            System.out.println("=====================================");
             String vlaue = (String) examUtil.getDistrictMap().get(id);
             Map distmap = examUtil.getDistrictMap();
             Map root = new HashMap();
