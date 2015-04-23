@@ -38,10 +38,10 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 		class="cn.net.tongfang.framework.util.ModuleUtil" scope="singleton"> 
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
-	
-	
+
+
 	<bean id="commonExamUtil"
-		class="cn.net.tongfang.web.service.commonexam.CommonExamUtil" scope="singleton"> 
+		  class="cn.net.tongfang.web.service.commonexam.CommonExamUtil" scope="singleton" init-method="refresh">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 	
@@ -60,11 +60,11 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 	<bean id="SmsUtil"
 		class="cn.net.tongfang.framework.util.SmsUtil" scope="singleton"> 
 		<property name="sessionFactory" ref="sessionFactory"/>
-		<property name="host" ><value>222.219.119.20</value></property>
-		<property name="name" ><value>sms</value></property>
-		<property name="pwd" ><value>sms</value></property>
-		<property name="apiId" ><value>sms</value></property>
-		<property name="dbName" ><value>mas</value></property>
+		<property name="host" ><value>127.0.0.1</value></property>
+		<property name="name" ><value>test</value></property>
+		<property name="pwd" ><value>test</value></property>
+		<property name="apiId" ><value>test</value></property>
+		<property name="dbName" ><value>test</value></property>
 	</bean>
 	
 	<bean id="sendjobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
