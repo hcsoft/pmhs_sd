@@ -1,5 +1,3 @@
-Ext.ns("Ext.tcm.oldman");
-
 Ext.grid.GridPanel.prototype.initComponent = Ext.grid.GridPanel.prototype.initComponent.createInterceptor(function () {
     if (this.store && this.bbar && this.bbar.xtype == 'paging' && !(this.bbar instanceof Ext.PagingToolbar) && !this.bbar.store) {
         if (this.store.xtype && !(this.store instanceof Ext.data.Store)) {
@@ -11,16 +9,18 @@ Ext.grid.GridPanel.prototype.initComponent = Ext.grid.GridPanel.prototype.initCo
         }
     }
 });
-//取得查询条件
-Ext.tcm.oldman.type = getScriptParam(document.currentScript.src, "type");
+var documentscriptsrc = document.currentScript.src;
 //取得参数
-qDwr(CommonQueryService.get_Export_Param, Ext.tcm.oldman.type)
+qDwr(CommonQueryService.get_Export_Param, getScriptParam(documentscriptsrc, "type"))
     .then(function (cfg) {
         return qDwr(CommonQueryService.sqlListHead, cfg.main[0][0]).then(function (head) {
             return {cfg: cfg, head: head};
         });
-    }).then(function (data) {
-        console.log(data);
+    })
+    .then(function (data) {
+        var preid = "currenttab"+ CryptoJS.MD5(documentscriptsrc).toString();
+        var hcsoft = hcsoftScope(preid);
+        hcsoft.ns();
         var queryid = data.cfg.main[0][0];
         //取得下拉列表
         var tbarstore = [];
@@ -43,17 +43,17 @@ qDwr(CommonQueryService.get_Export_Param, Ext.tcm.oldman.type)
         }
         function getParams() {
             //取得行政区划
-            var root = Ext.tcm.oldman.tcmcurrentnode;
+            var root = hcsoft.scope().tcmcurrentnode;
             if (!root) {
-                root = Ext.getCmp("tcm.oldman.query.district").getSelectionModel().getSelectedNode();
+                root = hcsoft.cmp("query.district").getSelectionModel().getSelectedNode();
             }
             if (!root) {
-                root = Ext.getCmp("tcm.oldman.query.district").getRootNode().firstChild;
+                root = hcsoft.cmp("query.district").getRootNode().firstChild;
             }
             //取得其他参数
             var params = {};
-            var combovalue = Ext.getCmp("tcm.oldman.query.combovalue").getValue();
-            var comboname = Ext.getCmp("tcm.oldman.query.combokey").getValue();
+            var combovalue = hcsoft.cmp("query.combovalue").getValue();
+            var comboname = hcsoft.cmp("query.combokey").getValue();
             if(!Ext.isEmpty( combovalue)){
                 params[comboname] = combovalue;
             }
@@ -62,7 +62,7 @@ qDwr(CommonQueryService.get_Export_Param, Ext.tcm.oldman.type)
         }
 
         //生成页面
-        Ext.tcm.oldman.oldManQuery = new Ext.Panel({
+        hcsoft.scope().panel = new Ext.Panel({
             // layout : 'anchor',
             layout: 'border',
             defaults: {
@@ -70,7 +70,7 @@ qDwr(CommonQueryService.get_Export_Param, Ext.tcm.oldman.type)
             },
             tbar: ['状态：', {
                 xtype: 'combo',
-                id: 'tcm.oldman.query.statuscombo',
+                id: hcsoft.id('query.statuscombo'),
                 store: [['1','年内已检查'],['2','年内未检查']],
                 mode: 'local',
                 editable: false,
@@ -79,7 +79,7 @@ qDwr(CommonQueryService.get_Export_Param, Ext.tcm.oldman.type)
                 triggerAction: 'all'
             },'选择条件：', {
                 xtype: 'combo',
-                id: 'tcm.oldman.query.combokey',
+                id: hcsoft.id('query.combokey'),
                 store: tbarstore,
                 mode: 'local',
                 editable: false,
@@ -88,25 +88,25 @@ qDwr(CommonQueryService.get_Export_Param, Ext.tcm.oldman.type)
                 triggerAction: 'all'
             }, {
                 xtype: 'field',
-                id: 'tcm.oldman.query.combovalue'
+                id: hcsoft.id('query.combovalue')
                 // format : 'Y-m-d',
                 // value :new Date()
             }, "-", {
                 text: '查询',
                 iconCls: 'c_refresh',
-                id: 'tcm.oldman.querybtn',
+                id: hcsoft.id('querybtn'),
                 handler: function (obj) {
                     // obj.disable();
-                    Ext.getCmp("tcm.oldman.querybtn").disable();
-                    Ext.getCmp("tcm.query.oldman.grid").getStore().reload();
+                    hcsoft.cmp('querybtn').disable();
+                    hcsoft.cmp('query.grid').getStore().reload();
                 }
             }, {
                 text: '导出',
                 iconCls: 'c_save',
-                id: 'tcmQuery.savebtn',
+                id: hcsoft.id('tcmQuery.savebtn'),
                 handler: function (obj) {
                     var params = getParams();
-                    qDwr(CommonQueryService.sqlExport, [params[0], params[1], '老年人中医健康管理导出', params[2]])
+                    qDwr(CommonQueryService.sqlExport, [params[0], params[1], '老年人中医健康管理导出', params[2]],true)
                         .then(function (data) {
                             window.location.href = data;
                         });
@@ -120,7 +120,7 @@ qDwr(CommonQueryService.get_Export_Param, Ext.tcm.oldman.type)
                     layout: 'fit',
                     animate: true,
                     title: '行政区划',
-                    id: 'tcm.oldman.query.district',
+                    id: hcsoft.id('query.district'),
                     enableDD: false,
                     loader: new Ext.ux.DWRTreeLoader({
                         dwrCall: UserMenuTreeService.getUserDistrictNodes
@@ -136,15 +136,15 @@ qDwr(CommonQueryService.get_Export_Param, Ext.tcm.oldman.type)
                     rootVisible: false,
                     listeners: {
                         click: function (node) {
-                            Ext.tcm.oldman.tcmcurrentnode = node;
+                            hcsoft.scope().tcmcurrentnode = node;
 
-                            Ext.getCmp("tcm.query.oldman.grid").store.reload();
-                            Ext.getCmp("tcm.query.oldman.grid").setTitle(node.text);
+                            hcsoft.cmp("query.grid").store.reload();
+                            hcsoft.cmp("query.grid").setTitle(node.text);
                         },
                         load: function () {
-                            var node = Ext.getCmp("tcm.oldman.query.district").getRootNode().firstChild;
-                            Ext.getCmp("tcm.query.oldman.grid").setTitle(node.text);
-                            Ext.getCmp("tcm.query.oldman.grid").store.reload();
+                            var node = hcsoft.cmp("query.district").getRootNode().firstChild;
+                            hcsoft.cmp("query.grid").setTitle(node.text);
+                            hcsoft.cmp("query.grid").store.reload();
                         }
                     }
                 }
@@ -153,7 +153,7 @@ qDwr(CommonQueryService.get_Export_Param, Ext.tcm.oldman.type)
             }, {
                 xtype: 'grid',
                 region: 'center',
-                id: 'tcm.query.oldman.grid',
+                id: hcsoft.id('query.grid'),
                 title:'中医药健康管理',
                 store: new Ext.data.Store({
                     // autoLoad : true,
@@ -161,7 +161,7 @@ qDwr(CommonQueryService.get_Export_Param, Ext.tcm.oldman.type)
                         dwrFunction: CommonQueryService.sqlListnew,
                         listeners: {
                             load: function () {
-                                Ext.getCmp("tcm.oldman.querybtn").enable();
+                                hcsoft.cmp("querybtn").enable();
                             },
                             beforeload: function (dataProxy, params) {
                                 var param = getParams();
@@ -199,6 +199,6 @@ qDwr(CommonQueryService.get_Export_Param, Ext.tcm.oldman.type)
                 }
             }]
         });
-        ModuleMgr.register(Ext.tcm.oldman.oldManQuery);
+        ModuleMgr.register(hcsoft.scope().panel);
     });
 

@@ -70,8 +70,7 @@ function qDwr(func,params,flag) {
 		for(var i = 0 ; i <params.length;i++){
 			arrays.push("params["+i+"]");
 		}
-		var excstr = "func("+ arrays.join(",")+",function(data){deferred.resolve(data);});)";
-		console.log(execstr);
+		var excstr = "func("+ arrays.join(",")+",function(data){deferred.resolve(data);});";
 		eval(excstr);
 	}else{
 		func(params,function(data){
@@ -79,4 +78,21 @@ function qDwr(func,params,flag) {
 		});
 	}
 	return deferred.promise;
+}
+
+function hcsoftScope(preid){
+	return {
+		ns:function(){
+			Ext.ns("Ext.hcsoft."+preid);
+		},
+		cmp:function(name){
+			return Ext.getCmp(this.id(name));
+		},
+		id:function(name){
+			return "Ext.hcsoft."+preid+"."+name;
+		},
+		scope:function(){
+			return Ext['hcsoft'][preid];
+		}
+	}
 }

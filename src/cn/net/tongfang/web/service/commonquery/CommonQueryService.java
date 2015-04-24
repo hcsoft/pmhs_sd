@@ -6,17 +6,12 @@ import cn.net.tongfang.framework.security.vo.ExportMain;
 import cn.net.tongfang.framework.security.vo.ExportSub;
 import cn.net.tongfang.framework.util.BusiUtils;
 import cn.net.tongfang.framework.util.SystemInformationUtils;
-import cn.net.tongfang.framework.util.service.ModuleMgr;
-import com.alibaba.druid.sql.ast.SQLStatement;
-import com.alibaba.druid.sql.ast.statement.SQLSelect;
 import com.alibaba.druid.sql.ast.statement.SQLSelectItem;
-import com.alibaba.druid.sql.ast.statement.SQLSelectQuery;
 import com.alibaba.druid.sql.dialect.sqlserver.ast.SQLServerSelect;
 import com.alibaba.druid.sql.dialect.sqlserver.ast.SQLServerSelectQueryBlock;
 import com.alibaba.druid.sql.dialect.sqlserver.parser.SQLServerExprParser;
 import com.alibaba.druid.sql.dialect.sqlserver.parser.SQLServerSelectParser;
 import com.alibaba.druid.sql.dialect.sqlserver.visitor.SQLServerOutputVisitor;
-import com.alibaba.druid.sql.visitor.SQLASTVisitor;
 import com.google.gson.Gson;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -61,12 +56,14 @@ public class CommonQueryService extends HibernateDaoSupport {
      */
     private String getWebRootAbsolutePath() {
         String path = null;
-        String folderPath = ModuleMgr.class.getProtectionDomain()
+        String folderPath = CommonQueryService.class.getProtectionDomain()
                 .getCodeSource().getLocation().getPath();
+        System.out.println("folderPath==="+folderPath);
         if (folderPath.indexOf("WEB-INF") > 0) {
             path = folderPath.substring(0,
                     folderPath.indexOf("WEB-INF/classes"));
         }
+        System.out.println("path==="+path);
         return path;
     }
 
@@ -105,6 +102,7 @@ public class CommonQueryService extends HibernateDaoSupport {
     public String sqlExport(String disid, String id, String name, Map params) throws Exception {
         TaxempDetail user = cn.net.tongfang.framework.security.SecurityManager
                 .currentOperator();
+        System.out.println("name==="+name);
         File f = File.createTempFile(name, ".xls", new File(getWebRootAbsolutePath() + "data/"));
         String fileName = f.getName();
         HSSFWorkbook wb = new HSSFWorkbook();
@@ -470,25 +468,19 @@ public class CommonQueryService extends HibernateDaoSupport {
 
     public List sqlListHead(String id) throws Exception {
         try {
-            Connection conn = getSession().connection();
+            List retlist = new ArrayList();
             List sqllist = getSession().createQuery("from ExportMain where id = " + id + " order by id").list();
             ExportMain main = (ExportMain) sqllist.get(0);
             String sql = main.getSql();
-            sql = sql + " and 1=2 " + main.getGroupby() + " " + main.getOrderby();
             sql = sql.replaceAll("\"", "'");
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            System.out.println("sql===" + sql);
-            if (sql.indexOf("?") > 0) {
-                stmt.setString(1, "9999999999");
-            }
-            ResultSet rs = stmt.executeQuery();
-            ResultSetMetaData rsMetaData = rs.getMetaData();
-            int numberOfColumns = rsMetaData.getColumnCount();
-            List retlist = new ArrayList();
-            for (int i = 1; i <= numberOfColumns; i++) {
+            SQLServerSelectParser parser = new SQLServerSelectParser(sql);
+            SQLServerSelect select = (SQLServerSelect)parser.select();
+            SQLServerSelectQueryBlock query = (SQLServerSelectQueryBlock)select.getQuery();
+            for (int i = 0; i < query.getSelectList().size(); i++) {
                 Map colmap = new HashMap();
-                colmap.put("field", "col" + i);
-                String title = rsMetaData.getColumnLabel(i);
+                colmap.put("field", "col" + (i+1));
+                SQLSelectItem item = query.getSelectList().get(i);
+                String title = item.getAlias().replaceAll("'","");
                 if (title.trim().toLowerCase().startsWith("button:")) {
                     title = title.trim().substring(7);
                     colmap.put("format", "buttonColumn");
