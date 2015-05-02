@@ -1,33 +1,26 @@
 package cn.net.tongfang.web.service.tcm;
 
-import java.io.FileOutputStream;
-import java.sql.CallableStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.Types;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import cn.net.tongfang.framework.security.bo.NewQryCondition;
+import cn.net.tongfang.framework.security.demo.service.TaxempDetail;
+import cn.net.tongfang.framework.util.service.vo.PagingParam;
+import cn.net.tongfang.framework.util.service.vo.PagingResult;
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.ArrayHandler;
+import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import org.springframework.orm.hibernate3.SessionFactoryUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import cn.net.tongfang.framework.security.bo.NewQryCondition;
-import cn.net.tongfang.framework.security.demo.service.TaxempDetail;
-import cn.net.tongfang.framework.util.service.ModuleMgr;
-import cn.net.tongfang.framework.util.service.vo.PagingParam;
-import cn.net.tongfang.framework.util.service.vo.PagingResult;
+import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TcmService extends HibernateDaoSupport {
     private static final Logger log = Logger.getLogger(TcmService.class);
@@ -103,8 +96,30 @@ public class TcmService extends HibernateDaoSupport {
         }
     }
     @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
-    public List getQuestions(){
-        return getSession().createSQLQuery("select * from tcm_questions   order by ord").list();
+    public List getQuestions() throws Exception{
+        try {
+            QueryRunner run = new QueryRunner(SessionFactoryUtils.getDataSource(getSessionFactory())  );
+            return run.query("select * from tcm_questions   order by ord", new MapListHandler());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
+    @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+    public List getResults()  throws Exception{
+        try {
+            QueryRunner run = new QueryRunner(SessionFactoryUtils.getDataSource(getSessionFactory())  );
+            return run.query("select * from tcm_result   order by id", new MapListHandler());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public String getTel()  throws Exception{
+        QueryRunner run = new QueryRunner(SessionFactoryUtils.getDataSource(getSessionFactory())  );
+        Object[] rs = run.query("select TelNumber from Organization  where id = ?  order by id ",new ArrayHandler(),cn.net.tongfang.framework.security.SecurityManager.currentOperator().getOrgId());
+        return String.valueOf(rs[0]);
+    }
 }

@@ -113,15 +113,17 @@ getGridFromQueryType(getScriptParam(documentscriptsrc, "type"), documentscriptsr
         };
         scope.scope().newcheck = function () {
             var row = scope.scope().currentrow;
+            console.log(row);
+            var params = {};
             var window = new Ext.Window({
                 closable: true,
                 layout: 'fit',
                 modal: true,
-                title: '默认值模板管理',
+                title: '中医药健康管理服务--'+row.data["col2"],
                 items: [
                     {
                         xtype: 'iframepanel',
-                        defaultSrc: "/js/tcm/oldman.html",
+                        defaultSrc: "/js/tcm/oldman.html?"+$.param(row.data),
                         layout: 'fit',
                         style: 'top:0px;bottom:10px',
                         loadMask: true,
@@ -129,12 +131,14 @@ getGridFromQueryType(getScriptParam(documentscriptsrc, "type"), documentscriptsr
                         listeners: {
                             message: function (f, data) {
                                 if (data.data == 'quit') {
-                                    taskwindow.close();
+                                    window.close();
                                 } else if (data.data == 'saved') {
                                     this.load();
                                 }
                             }.createDelegate(this)
+
                         }
+
                     }
                 ]
             });

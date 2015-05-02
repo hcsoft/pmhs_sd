@@ -113,6 +113,7 @@ ul {
 .right-col {
     float: left;
     width: 850px;
+    padding: 5px;
     -webkit-box-shadow: 1px 0 10px 1px rgba(0, 0, 0, .3);
     -moz-box-shadow: 1px 0 10px 1px rgba(0, 0, 0, .3);
     box-shadow: 1px 0 10px 1px rgba(0, 0, 0, .3);
@@ -145,8 +146,8 @@ ul {
 .right-menu ul>li >a{
     position: relative;
     display: block;
-    height: 38px;
-    line-height: 36px;
+    height: 23px;
+    line-height: 23px;
     margin: 0;
     padding: 0 5px 0 10px;
     -webkit-text-shadow: none !important;
@@ -233,6 +234,10 @@ ul {
 .content{
     /*padding-top: 0px;*/
 }
+div.result{
+    background-color: #fbfbfb;
+   z-index:10;
+}
 
 .content table,div.result table{
     border:1px solid #000;
@@ -260,7 +265,9 @@ ul {
 .content table tr.selected td.active{
     color:blue;
 }
-
+table{
+    font-size:15px;
+}
 
 .content table td:first-child{
     color:red;
@@ -284,7 +291,7 @@ ul {
     cursor: pointer;
 }
 th.head {
-    width:80px;
+    width:45px;
 }
 td.score input[type=text]{
     border-left:none;
@@ -296,12 +303,56 @@ td.score input[type=text]{
     text-align: center;
 
 }
-td.score input[type=radio]{
+td.score input[type=radio],td.suggest input[type=checkbox]{
     display:none;
 }
-td.score input[type=radio]:checked ~ label{
-    color:blue;
+td.score input[type=radio]:checked + label , td.suggest input[type=checkbox]:checked + label{
+     color:blue;
+ }
+td.score label,td.suggest label{
+    position: relative;
+}
+td.score input[type=radio]:checked + label:before,td.suggest input[type=checkbox]:checked + label:before {
+    content: "√";
+    font-family: '宋体';
+    font-size: 12px;
+    font-weight: bold;
+    color: red;
+    left: -1px;
+    top: 3px;
+    position: absolute;
+}
+
+.result table {
+    line-height: 25px;
 }
 
 
+#suggest_tr label{
+    cursor:pointer;
+}
 
+.report input[type=text]{
+    border-left:none;
+    border-top:none;
+    border-right:none;
+    border-bottom: 1px solid darkgrey;
+    text-align: center;
+    color:blue;
+    background-color: transparent;
+    width:100px;
+}
+
+.report{
+    padding:5px 10px;
+    background-color: white;
+}
+.report p{
+    text-indent:32px;
+    margin: 5px 0 ;
+    line-height:30px;
+}
+.report h5{
+    font-size:20px;
+    margin:7px 0 ;
+}

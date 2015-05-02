@@ -65,7 +65,10 @@ function getScriptParam(scripturl, name) {
 
 function qDwr(func, params, flag) {
     var deferred = Q.defer();
-    if (flag) {
+    if(!params){
+        var excstr = "func(function(data){deferred.resolve(data);});";
+        eval(excstr);
+    }else  if (flag) {
         var arrays = [];
         for (var i = 0; i < params.length; i++) {
             arrays.push("params[" + i + "]");
@@ -323,4 +326,28 @@ function getGridFromQueryType(type, documentscriptsrc, exprotname) {
             }
         });
 
+}
+
+function arrayToObject(array){
+    var ret = {};
+    for(var i =0 ; i <array.length;i++){
+        var item = array[i];
+        ret[item['name']]=item['value'];
+    }
+    return ret;
+}
+
+function getURLParameters(url){
+
+    var result = {};
+    var searchIndex = url.indexOf("?");
+    if (searchIndex == -1 ) return result;
+    var sPageURL = url.substring(searchIndex +1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++)
+    {
+        var sParameterName = sURLVariables[i].split('=');
+        result[sParameterName[0]] = decodeURIComponent(sParameterName[1]);
+    }
+    return result;
 }
