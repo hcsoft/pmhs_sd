@@ -19,6 +19,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import cn.net.tongfang.framework.security.bo.NewQryCondition;
@@ -100,10 +102,9 @@ public class TcmService extends HibernateDaoSupport {
             throw ex;
         }
     }
-
-
-
-
-
+    @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
+    public List getQuestions(){
+        return getSession().createSQLQuery("select * from tcm_questions   order by ord").list();
+    }
 
 }

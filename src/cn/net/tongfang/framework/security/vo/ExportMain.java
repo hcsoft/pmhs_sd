@@ -17,6 +17,7 @@ public class ExportMain implements java.io.Serializable {
 	private String orgparamtype;
 	private Boolean pageable;
 	private Integer pagesize;
+	private String widths;
 
 	// Constructors
 
@@ -25,16 +26,14 @@ public class ExportMain implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public ExportMain(Integer id, String name, String sql) {
+	public ExportMain(Integer id) {
 		this.id = id;
-		this.name = name;
-		this.sql = sql;
 	}
 
 	/** full constructor */
 	public ExportMain(Integer id, String name, String sql, String orderby,
 			String groupby, Integer type, String orgparamtype,
-			Boolean pageable, Integer pagesize) {
+			Boolean pageable, Integer pagesize, String widths) {
 		this.id = id;
 		this.name = name;
 		this.sql = sql;
@@ -44,6 +43,7 @@ public class ExportMain implements java.io.Serializable {
 		this.orgparamtype = orgparamtype;
 		this.pageable = pageable;
 		this.pagesize = pagesize;
+		this.widths = widths;
 	}
 
 	// Property accessors
@@ -118,6 +118,14 @@ public class ExportMain implements java.io.Serializable {
 
 	public void setPagesize(Integer pagesize) {
 		this.pagesize = pagesize;
+	}
+
+	public String getWidths() {
+		return this.widths;
+	}
+
+	public void setWidths(String widths) {
+		this.widths = widths;
 	}
 
 }

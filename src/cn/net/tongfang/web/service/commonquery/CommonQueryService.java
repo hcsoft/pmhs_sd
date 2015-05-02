@@ -80,7 +80,7 @@ public class CommonQueryService extends HibernateDaoSupport {
         return ret;
     }
 
-
+    @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
     public Map<String, List> get_Export_Param(String type) throws Exception {
         Map<String, List> ret = new HashMap<String, List>();
         String where = "";
@@ -90,15 +90,14 @@ public class CommonQueryService extends HibernateDaoSupport {
             where = " type=" + type;
         }
         System.out.println("where == " + where);
-        List main = getSession().createQuery("select id ,name,orgparamtype,pageable,pagesize from ExportMain where " + where + " order by id").list();
+        List main = getSession().createQuery("select id ,name,orgparamtype,pageable,pagesize,widths from ExportMain where " + where + " order by id").list();
         List sub = getSession().createQuery("from ExportSub where ord>=0 and  mainid in (select id from ExportMain where " + where + " )  order by mainid , ord").list();
         ret.put("sub", sub);
         ret.put("main", main);
-        System.out.println("==" + new Gson().toJson(ret));
         return ret;
     }
 
-
+    @Transactional(propagation = Propagation.NOT_SUPPORTED, readOnly = true)
     public String sqlExport(String disid, String id, String name, Map params) throws Exception {
         TaxempDetail user = cn.net.tongfang.framework.security.SecurityManager
                 .currentOperator();
@@ -440,21 +439,21 @@ public class CommonQueryService extends HibernateDaoSupport {
         for (int i = 1; i <= numberOfColumns; i++) {
             Class cls = Class.forName(rsMetaData
                     .getColumnClassName(i));
-            if (cls.isAssignableFrom(String.class)) {
-                row.put("col" + (i - 1), (rs.getString(i)));
-            } else if (cls.isAssignableFrom(Float.class)) {
-                row.put("col" + (i - 1), rs.getFloat(i));
-            } else if (cls.isAssignableFrom(Integer.class)) {
-                row.put("col" + (i - 1), rs.getInt(i));
-            } else if (cls.isAssignableFrom(Long.class)) {
-                row.put("col" + (i - 1), rs.getLong(i));
-            } else if (cls.isAssignableFrom(Date.class) || cls.isAssignableFrom(java.sql.Timestamp.class)) {
-                Date obj = rs.getDate(i);
-                row.put("col" + (i - 1), BusiUtils.format(obj));
-            } else {
+//            if (cls.isAssignableFrom(String.class)) {
+//                row.put("col" + (i - 1), (rs.getString(i)));
+//            } else if (cls.isAssignableFrom(Float.class)) {
+//                row.put("col" + (i - 1), rs.getFloat(i));
+//            } else if (cls.isAssignableFrom(Integer.class)) {
+//                row.put("col" + (i - 1), rs.getInt(i));
+//            } else if (cls.isAssignableFrom(Long.class)) {
+//                row.put("col" + (i - 1), rs.getLong(i));
+//            } else if (cls.isAssignableFrom(Date.class) || cls.isAssignableFrom(java.sql.Timestamp.class)) {
+//                Date obj = rs.getDate(i);
+//                row.put("col" + (i - 1), BusiUtils.format(obj));
+//            } else {
                 Object obj = rs.getObject(i);
                 row.put("col" + (i - 1), (obj));
-            }
+//            }
         }
         return row;
     }
