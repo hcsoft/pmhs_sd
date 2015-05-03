@@ -307,7 +307,6 @@ public class CommonQueryService extends HibernateDaoSupport {
                 }
                 ResultSet rs = stmt.executeQuery();
                 ResultSetMetaData rsMetaData = rs.getMetaData();
-                int numberOfColumns = rsMetaData.getColumnCount();
 
                 List retlist = new ArrayList();
                 // 移动到最后一行,得到总数
@@ -317,7 +316,7 @@ public class CommonQueryService extends HibernateDaoSupport {
                 while (flag) {
                     rowcount++;
                     // List row = new ArrayList();
-                    retlist.add(getRow(rsMetaData, rs));
+                    retlist.add(getRow(rsMetaData, rs,true));
                     flag = rs.next();
                 }
                 ret.put("rows", retlist);
@@ -383,7 +382,7 @@ public class CommonQueryService extends HibernateDaoSupport {
                 // 移动到取数位置
                 while (rs.next()) {
                     // List row = new ArrayList();
-                    retlist.add(getRow(rsMetaData, rs));
+                    retlist.add(getRow(rsMetaData, rs,false));
                 }
                 ret.put("rows", retlist);
                 ret.put("currentpage", pageNum);
@@ -433,27 +432,17 @@ public class CommonQueryService extends HibernateDaoSupport {
         return paramidx;
     }
 
-    private Map getRow(ResultSetMetaData rsMetaData, ResultSet rs) throws Exception {
+    private Map getRow(ResultSetMetaData rsMetaData, ResultSet rs , boolean flag) throws Exception {
         Map row = new HashMap();
         int numberOfColumns = rsMetaData.getColumnCount();
-        for (int i = 1; i <= numberOfColumns; i++) {
-            Class cls = Class.forName(rsMetaData
-                    .getColumnClassName(i));
-//            if (cls.isAssignableFrom(String.class)) {
-//                row.put("col" + (i - 1), (rs.getString(i)));
-//            } else if (cls.isAssignableFrom(Float.class)) {
-//                row.put("col" + (i - 1), rs.getFloat(i));
-//            } else if (cls.isAssignableFrom(Integer.class)) {
-//                row.put("col" + (i - 1), rs.getInt(i));
-//            } else if (cls.isAssignableFrom(Long.class)) {
-//                row.put("col" + (i - 1), rs.getLong(i));
-//            } else if (cls.isAssignableFrom(Date.class) || cls.isAssignableFrom(java.sql.Timestamp.class)) {
-//                Date obj = rs.getDate(i);
-//                row.put("col" + (i - 1), BusiUtils.format(obj));
-//            } else {
+        int base = 1;
+        if(!flag){
+            //分页的数据多出了rownum列,要去掉
+            base = 2;
+        }
+        for (int i = base; i <= numberOfColumns; i++) {
                 Object obj = rs.getObject(i);
-                row.put("col" + (i - 1), (obj));
-//            }
+                row.put("col" + (i-base+1), (obj));
         }
         return row;
     }

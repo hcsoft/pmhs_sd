@@ -62,7 +62,7 @@
                     <h3 id="idx_1" style="text-align: center">健康信息采集</h3>
 
                 </div>
-                <div class="report">
+                <div class="report" id="report">
                     <h3 id="idx_3" style="text-align: center">65岁以上老年人中医体质健康处方</h3>
 
                     <div>
@@ -97,16 +97,10 @@
     </div>
 </div>
 
-
-<script language="javascript" src="/js/LodopFuncs.js"></script>
-<object id="LODOP" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA"
-        width=0 height=0>
-    <embed id="LODOP_EM" type="application/x-print-lodop" width=0 height=0
-           pluginspage="install_lodop.exe"></embed>
-</object>
 <script language="javascript" src="/js/lib/jquery-2.1.3.min.js"></script>
 <script language="javascript" src="/js/lib/scroll-up-bar.min.js"></script>
 <script language="javascript" src="/js/lib/jquery.pin.min.js"></script>
+<script language="javascript" src="/js/lib/jquery.PrintArea.js"></script>
 <script language="javascript" src="/js/lib/jquery.scrollTo.min.js"></script>
 <script language="javascript" src="/js/lib/q.js"></script>
 <script language="javascript" src="/js/util/util.js"></script>
@@ -115,10 +109,15 @@
 <script type='text/javascript' src='/dwr/interface/TcmService.js'></script>
 <script type="text/javascript" src="/js/ext/ext-base.js"></script>
 <script type="text/javascript" src="/js/ext/ext-all.js"></script>
+<script language="javascript" src="/js/lib/LodopFuncs.js"></script>
+<object width="0" height="0" style="position:absolute;left:0px;top:-100px;width:0px;height:0px;"
+        type="application/x-print-lodop"></object>
 <script>
     $(function () {
         var rowdata = getURLParameters(location.search);
-
+        var fileno = rowdata['col1'];
+        $("#name").val(rowdata['col2']);
+        var checkid = rowdata['id'];
 
         console.log(rowdata);
         //处理左侧导航
@@ -173,18 +172,18 @@
         var init = qDwr(TcmService.getQuestions).then(function (questions) {
             return qDwr(TcmService.getResults).then(function (results) {
                 initdata = {questions: questions, results: results};
+
             });
-        }).then(function(data){
+        }).then(function (data) {
             return qDwr(TcmService.getTel).then(function (tel) {
                 inittel = tel;
+                $("#tel").val(inittel);
                 return data;
             });
         });
         //计算分数
         function calcscore() {
             init.then(function () {
-                $("#name").val(rowdata['col2']);
-                $("#tel").val(inittel);
                 var results = initdata.results;
                 var formdata = arrayToObject($("#questionform").serializeArray());
                 var calcdata = {};
@@ -264,28 +263,67 @@
         //保存数据
         function savedata() {
             var results = initdata.results;
+            var scores = {};
+            var rs = [];
+            var bodytypestr = '';
             for (var i = 0; i < results.length; i++) {
                 var item = results[i];
                 if (window.top.Ext.isEmpty(item['score'])) {
                     window.top.Ext.Msg.alert('提示', '问题未回答完!');
                     return;
                 }
-            }
-            console.log(results);
-            var rs = {};
+                var retitem = {};
+                retitem['id'] = item['item'];
+                retitem['name'] = item['name'];
+                retitem['score'] = item['score'];
 
-            var ret = {};
-            ret['score1']=results[0]['score'];
-            ret['score2']=results[1]['score'];
-            ret['score3']=results[2]['score'];
-            ret['score4']=results[3]['score'];
-            ret['score5']=results[4]['score'];
-            ret['score6']=results[5]['score'];
-            ret['score7']=results[6]['score'];
-            ret['score8']=results[7]['score'];
-            ret['score9']=results[8]['score'];
-            ret['result']=results[8]['score'];
-            ret['fileno']=rowdata['col1'];
+                if (item['yesflag']) {
+                    retitem['result'] = 1;
+                    bodytypestr += ',' + item['name'];
+                } else if (item['allmostyesflag']) {
+                    retitem['result'] = 2;
+                } else {
+                    retitem['result'] = 0;
+                }
+                rs.push(retitem);
+
+            }
+            var formdata = arrayToObject($("#questionform").serializeArray());
+            var calcdata = {};
+            for (var key in formdata) {
+                if (key.substr(0, 1) == 'q') {
+                    calcdata[key] = parseInt(formdata[key]);
+                }
+            }
+            scores['questionscore'] = calcdata;
+            scores['bodytype'] = rs;
+
+            console.log(results);
+            var params = {};
+            params['score1'] = results[0]['score'];
+            params['score2'] = results[1]['score'];
+            params['score3'] = results[2]['score'];
+            params['score4'] = results[3]['score'];
+            params['score5'] = results[4]['score'];
+            params['score6'] = results[5]['score'];
+            params['score7'] = results[6]['score'];
+            params['score8'] = results[7]['score'];
+            params['score9'] = results[8]['score'];
+            params['result'] = results[8]['score'];
+            params['fileno'] = fileno;
+            params['result'] = bodytypestr.substring(1);
+            params['json'] = JSON.stringify(scores);
+            console.log(params);
+            if (!Ext.isEmpty(checkid)) {
+                params['id'] = checkid;
+            }
+            qDwr(TcmService.saveOldman, params)
+                    .then(function (rs) {
+                        checkid = rs;
+                        window.top.Ext.Msg.alert('保存成功', '保存成功!');
+                    }).catch(function (rs) {
+                        window.top.Ext.Msg.alert('保存异常', '请与系统管理员联系!');
+                    });
         }
 
         //取消
@@ -313,7 +351,18 @@
 
         //打印
         function print() {
-
+            if (Ext.isEmpty(checkid)) {
+                window.top.Ext.Msg.alert('提示', '数据未保存,无法打印!');
+            } else {
+                var options = {
+                    mode: 'iframe',
+                    popClose: true,
+                    extraHead: '<meta charset="utf-8" />' +
+                    '<meta http-equiv="X-UA-Compatible" content="IE=edge"/>' +
+                    '<style>@page{ margin:0px auto;}</style>'
+                };
+                $("#report").printArea(options);
+            }
         }
 
         //从服务器取得数据后执行
@@ -368,11 +417,28 @@
                 }
                 return true;
             });
-            //进行测试
-            for (var i = 0; i < initdata.questions.length; i++) {
-                var quest = initdata.questions[i];
-                $("#question_" + (i + 1) + " td:first-child + td +td +td").click();
+            //如果传入了ID,那么加载数据
+            if (!Ext.isEmpty(checkid)) {
+                qDwr(TcmService.getOldman, checkid).then(function (data) {
+                    $("#name").val(data['name']);
+                    fileno = data['fileno'];
+                    var json = eval("(" + data.json + ")");
+                    for (var i = 0; i < 33; i++) {
+                        var val = parseInt(json.questionscore['q' + (i + 1)]);
+                        var selector = "#question_" + (i + 1) + " td:first-child ";
+                        for (var j = 0; j < val; j++) {
+                            selector += ' +td ';
+                        }
+                        $(selector).click();
+                    }
+                    calcscore();
+                });
             }
+            //进行测试
+//            for (var i = 0; i < initdata.questions.length; i++) {
+//                var quest = initdata.questions[i];
+//                $("#question_" + (i + 1) + " td:first-child + td +td +td").click();
+//            }
             return data;
         });
 

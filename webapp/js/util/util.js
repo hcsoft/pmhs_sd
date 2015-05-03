@@ -170,6 +170,12 @@ function getGridFromQueryType(type, documentscriptsrc, exprotname) {
             var firstselect = tbarstore[0][0];
             //取得显示的列
             var cm = [];
+            cm.push({
+                "sortable": true,
+                "header": "行号",
+                renderer: rowid,
+                width: 40
+            });
             var recordcfg = [];
             var width = data.cfg.main[0][5] == null ?[] :data.cfg.main[0][5].split(",");
             for (i = 0; i < data.head.length; i++) {
@@ -184,12 +190,12 @@ function getGridFromQueryType(type, documentscriptsrc, exprotname) {
                     mapping: data.head[i]['field']
                 });
             }
-            cm.splice(0,0, {
-                "sortable": true,
-                "header": "行号",
-                renderer: rowid,
-                width: 40
-            });
+            //cm.splice(0,0, {
+            //    "sortable": true,
+            //    "header": "行号",
+            //    renderer: rowid,
+            //    width: 40
+            //});
             hcsoft.scope().getQueryParams = hcsoft.getParams;
             return {
                 scope: hcsoft,

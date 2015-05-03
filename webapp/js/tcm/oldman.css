@@ -1,3 +1,7 @@
+@page{
+    margin:0px auto;
+    padding:200px;
+}
 * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -325,6 +329,9 @@ td.score input[type=radio]:checked + label:before,td.suggest input[type=checkbox
 
 .result table {
     line-height: 25px;
+}
+.result input{
+    color : blue;
 }
 
 
