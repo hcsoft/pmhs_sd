@@ -117,8 +117,7 @@ function hcsoftScope(preid, queryid) {
             //tbar.addItem(obj);
             this.cmp('mainpanel').topToolbar = tbar;
         },
-        getParams: function () {
-            //取得行政区划
+        getDistrictid:function(){
             var root = this.scope().tcmcurrentnode;
             if (!root) {
                 root = this.cmp("query.district").getSelectionModel().getSelectedNode();
@@ -126,6 +125,11 @@ function hcsoftScope(preid, queryid) {
             if (!root) {
                 root = this.cmp("query.district").getRootNode().firstChild;
             }
+            return root.id;
+        },
+        getParams: function () {
+            //取得行政区划
+            var distid = this.getDistrictid();
             //取得其他参数
             var params = {};
             var combovalue = this.cmp("query.combovalue").getValue();
@@ -133,11 +137,19 @@ function hcsoftScope(preid, queryid) {
             if (!Ext.isEmpty(combovalue)) {
                 params[comboname] = combovalue;
             }
-            return [root.id, queryid, params];
+            return [distid, queryid, params];
         },
         params: function () {
             //修改本函数用来修改参数变化
             return this.getParams();
+        },
+        hideCol:function(idx){
+            var cm = this.cmp('query.grid').getColumnModel();
+            var cfg = cm.getColumnsBy(function () {
+                return true;
+            });
+            cfg[idx]['hidden'] = true;
+            cm.setConfig(cfg);
         }
     };
 }
@@ -356,4 +368,21 @@ function getURLParameters(url){
         result[sParameterName[0]] = decodeURIComponent(sParameterName[1]);
     }
     return result;
+}
+
+function enterkey(e,obj){
+    if(e.keyCode==13 || e.keyCode==39)
+    {
+        if(e.data && e.data.next){
+            e.data.next.focus();
+            return false;
+        }
+    }
+    if(e.keyCode==37)
+    {
+        if(e.data && e.data.pre){
+            e.data.pre.focus();
+            return false;
+        }
+    }
 }

@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
@@ -22,10 +23,10 @@ public class TimestampConverter extends AbstractConverter {
 	private static String PATTERN = "yyyy-MM-dd";
 	private static String PATTERN_FALLBACK = "yyyyMMdd";
 	private static String PATTERN_HOUR_FALLBACK = "yyyyMMddHHmmss";
-	private Pattern p1 = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
-	private Pattern p2 = Pattern.compile("\\d{8}"); 
-	private Pattern p3 = Pattern.compile("\\d{14}"); 
-	
+	private static Pattern p1 = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
+	private static Pattern p2 = Pattern.compile("\\d{8}");
+	private static Pattern p3 = Pattern.compile("\\d{14}");
+
 	public Object convertInbound(Class<?> paramType, InboundVariable data)
 			throws ConversionException {
 		if (data.isNull()) {
@@ -39,7 +40,6 @@ public class TimestampConverter extends AbstractConverter {
 		}
 		
 		Timestamp date = null;
-		System.out.println("======value======"+value);
 		if ( value.length() > 0 ) {
 			try{
 				if(p1.matcher(value).matches()){
@@ -60,7 +60,6 @@ public class TimestampConverter extends AbstractConverter {
 				return null;
 			}
 		}
-		System.out.println("====date========"+date);
 		return date;
 	}
 
@@ -84,6 +83,10 @@ public class TimestampConverter extends AbstractConverter {
         }
 
         return new NonNestedOutboundVariable("new Date(" + millis + ")");
+	}
+
+	public static  void main(String[] args) throws  Exception{
+
 	}
 
 }

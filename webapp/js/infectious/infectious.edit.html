@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html style="height:100%;width:100%;" ng-app="all" ng-controller="Infectious">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="/js/angularjs/jqueryui/css/smoothness/jquery-ui-1.10.2.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="/js/angularjs/ui/build/angular-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="/js/angularjs/bootstrap/bootstrap.min.css">
+    <link href="/js/angularjs/select2/select2.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="infectious.edit.css">
+<body ng-cloak>
+<div style="width:900px;margin:0 auto;background-color: #fff;height:870px;">
+
+    <div class="content inputtable">
+        <div style="width:100%;text-align: center;"><h3>中华人民共和国传染病报告卡</h3></div>
+        <div style="width:320px;">卡片编号：<input ng-model="data.sNo"></div>
+        <div>报告类别：
+            <label><input type='radio' value='0' ng-model="data.iType">初次报告</label>
+            <label><input type='radio' value='1' ng-model="data.iType">订正报告</label>
+            (
+            <label><input type='radio' value='A' ng-disabled="data.iType !='订正报告'"
+                          ng-model="data.sChangeType">变更诊断</label>
+            <label><input type='radio' value='B' ng-disabled="data.iType !='订正报告'"
+                          ng-model="data.sChangeType">死亡</label>
+            <label><input type='radio' value='C' ng-disabled="data.iType !='订正报告'"
+                          ng-model="data.sChangeType">填卡错误</label>
+            )
+        </div>
+        <div class="top group">
+            <div class="w30">患者姓名<font color="red">*</font>：<input ng-model="data.sName"></div>
+            <div class="w70">(患者家长姓名：<input ng-model="data.sParentName">)</div>
+            <div class="w30">身份证号：<input ng-model="data.sIDCard"></div>
+            <div class="w70">
+                性别<font color="red">*</font>：
+                <select ng-model="data.sSex">
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+            </div>
+            <div class="w30">出生日期<font color="red">*</font>：<input ng-model="data.dBirthday" ui-date style="width:120px"></div>
+            <div class="w70">(如出生日期不祥,实足年龄：<input style="width:30px;" ng-model="data.iAge">：
+                <select ng-model="data.sAgeUnit">
+                    <option value="岁">岁</option>
+                    <option value="月">月</option>
+                    <option value="天">天</option>
+                </select>)
+            </div>
+            <div class="w60">工作单位或学校或托幼机构：<input ng-model="data.sUnit"></div>
+            <div class="w40">联系电话：<input ng-model="data.sLinkPhone"></div>
+            <div class="w100">病人属于<font color="red">*</font>：
+                <select ng-model="data.sRange" style="width:130px;">
+                    <option value="本县区">本县区</option>
+                    <option value="本市其他县区">本市其他县区</option>
+                    <option value="本省其它地市">本省其它地市</option>
+                    <option value="外省">外省</option>
+                    <option value="港澳台">港澳台</option>
+                    <option value="外籍">外籍</option>
+                </select>
+            </div>
+            <div class="w100">现住址：
+                <input style="width:80px;" ng-model="data.sProvince" ng-init="data.sProvince='云南'">省
+                <input style="width:80px;" ng-model="data.sCity" ng-init="data.sCity='宝山'">市
+                <input style="width:80px;" ng-model="data.sCounty" ng-init="data.sCounty='施甸'">县(区)
+                <input style="width:80px;" ng-model="data.sTowns">乡(镇、街道）
+                <input style="width:80px;" ng-model="data.sVillage">村
+                <input style="width:80px;" ng-model="data.sDoorplate">门牌号
+            </div>
+            <div class="w100">病例分类<font color="red">*</font>：（1）
+                <label><input type='radio' value='疑似病例' ng-model="data.sSickType1">疑似病例</label>
+                <label><input type='radio' value='临床诊断病例' ng-model="data.sSickType1">临床诊断病例</label>
+                <label><input type='radio' value='实验室确诊病例' ng-model="data.sSickType1">实验室确诊病例</label>
+                <label><input type='radio' value='病原携带者' ng-model="data.sSickType1">病原携带者</label>
+            </div>
+            <div class="w100" style="padding-left:76px;">（2）
+                <label><input type='radio' value='急性' ng-model="data.sSickType2">急性</label>
+                <label><input type='radio' value='慢性' ng-model="data.sSickType2">慢性</label>
+                （乙型肝炎、丙型肝炎、血吸虫病填写）
+            </div>
+            <div class="w100">发病日期： <input style="width:120px;" ng-model="data.dSickBegin" ui-date style="width:120px">(病原携带者填初检日期或就诊日期)</div>
+            <div>诊断日期： <input style="width:120px;" ng-model="data.dDiagnose" ui-date style="width:120px"></div>
+            <div>死亡日期： <input style="width:120px;" ng-model="data.dDeath" ui-date style="width:120px"> </div>
+        </div>
+        <div class="group w100">
+            <div class="w30">传染病等级：<input style="width:120px;" ng-model="data.sSickGrade"></div>
+            <div class="w70">传染病名称：<input type="hidden" ng-model="data.sSickID">
+                <input style="width:300px;" ng-model="data.sSickName">
+                <label><input type="checkbox" ng-true-value="1" ng-checked="data.iHBVSick==1" ng-false-value="0" ng-model="data.iHBVSick">乙肝</label>
+                <label><input type="checkbox" ng-true-value="1" ng-checked="data.iSexSick==1" ng-false-value="0" ng-model="data.iSexSick">性病</label>
+            </div>
+        </div>
+        <div class="group {{data.iSexSick|true:'1|enabled|disabled'}}">
+            <div class="w100">性病报告附卡(报告性病时需加填本栏项目)*</div>
+            <div class="w30">婚姻状况：
+                <select ng-model="data.sMarriageState" style="width:80px;" ng-disabled="data.iSexSick!=1">
+                    <option value="未婚">未婚</option>
+                    <option value="已婚">已婚</option>
+                </select>
+            </div>
+            <div class="w70">文化程度：
+                <select ng-model="data.sStudy" style="width:120px;" ng-disabled="data.iSexSick!=1">
+                    <option value="文盲">文盲</option>
+                    <option value="小学">小学</option>
+                    <option value="初中">初中</option>
+                    <option value="高中或中专">高中或中专</option>
+                    <option value="大专及以上">大专及以上</option>
+                </select>
+            </div>
+            <div class="w60">接触史：
+                <select ng-model="data.sTouch" style="width:200px;" ng-disabled="data.iSexSick!=1">
+                    <option value="注射毒品史">注射毒品史</option>
+                    <option value="非婚异性性接触史">非婚异性性接触史</option>
+                    <option value="配偶/固定性伴阳性">配偶/固定性伴阳性</option>
+                    <option value="男男性行为史">男男性行为史</option>
+                    <option value="献血（浆）史">献血（浆）史</option>
+                    <option value="输血/血制品史">输血/血制品史</option>
+                    <option value="母亲阳性">母亲阳性</option>
+                    <option value="职业暴露史">职业暴露史</option>
+                    <option value="手术史">手术史</option>
+                    <option value="其他">其他</option>
+                    <option value="不详">不详</option>
+                </select>
+            </div>
+            <div class="w40">其他接触史： <input style="width:100px;" ng-model="data.sTouchOther"
+                                           ng-disabled="data.iSexSick!=1"></div>
+            <div class="w30">传染途径：
+                <select ng-model="data.sPath" style="width:130px;" ng-disabled="data.iSexSick!=1">
+                    <option value="注射毒品">注射毒品</option>
+                    <option value="异性传播">异性传播</option>
+                    <option value="同性传播">同性传播</option>
+                    <option value="性接触+注射毒品">性接触+注射毒品</option>
+                    <option value="采血（浆）">采血（浆）</option>
+                    <option value="输血/血制品">输血/血制品</option>
+                    <option value="母婴传播">母婴传播</option>
+                    <option value="职业暴露">职业暴露</option>
+                    <option value="其他">其他</option>
+                    <option value="不详">不详</option>
+                </select></div>
+            <div class="w30">样本来源：
+                <select ng-model="data.sSource" style="width:130px;" ng-disabled="data.iSexSick!=1">
+                    <option value="术前检测">术前检测</option>
+                    <option value="受血前检测">受血前检测</option>
+                    <option value="性病门诊">性病门诊</option>
+                    <option value="其他就诊者检测">其他就诊者检测</option>
+                    <option value="婚前检测">婚前检测</option>
+                    <option value="孕前检查">孕前检查</option>
+                    <option value="检测咨询">检测咨询</option>
+                    <option value="阳者配偶或性伴检测">阳者配偶或性伴检测</option>
+                    <option value="女性阳性者子女">女性阳性者子女</option>
+                    <option value="检测职业暴露检测">检测职业暴露检测</option>
+                    <option value="娱乐场所人员体检">娱乐场所人员体检</option>
+                    <option value="有偿供血(浆)人员检测">有偿供血(浆)人员检测</option>
+                    <option value="无偿献血人员检测">无偿献血人员检测</option>
+                    <option value="出入境人员体检">出入境人员体检</option>
+                    <option value="新兵体检">新兵体检</option>
+                    <option value="强制/劳教戒毒人员检测">强制/劳教戒毒人员检测</option>
+                    <option value="妇教所/女劳收教人员检测">妇教所/女劳收教人员检测</option>
+                    <option value="其他羁押人员体检">其他羁押人员体检</option>
+                    <option value="专题调查">专题调查</option>
+                    <option value="其他">其他</option>
+                </select></div>
+            <div class="w40">其它来源：<input style="width:100px;" ng-model="data.sSourceOther"
+                                         ng-disabled="data.iSexSick!=1"></div>
+        </div>
+        <div class="w100 group  {{data.iHBVSick|true:'1|enabled|disabled'}}">
+            <div class="w100">乙肝病例附卡(报告乙肝时需加填本栏项目)</div>
+            <div class="w100">HBsAg阳性时间：
+                <label><input type='radio' value='0' ng-disabled="data.iHBVSick!=1"
+                              ng-model="data.iHBsAg">&lt;6个月</label>
+                <label><input type='radio' value='1' ng-disabled="data.iHBVSick!=1"
+                              ng-model="data.iHBsAg">6个月内由阴性转为阳性</label>
+                <label><input type='radio' value='2' ng-disabled="data.iHBVSick!=1"
+                              ng-model="data.iHBsAg">既往未检测或结果不详</label>
+            </div>
+            <div class="w40">首次出现乙肝症状和体征时间：
+                <input style="width:50px;" ng-model="data.iFirstYear" ng-disabled="data.iHBVSick!=1">年
+                <input style="width:30px;" ng-model="data.iFirstMonth" ng-disabled="data.iHBVSick!=1">月
+            </div>
+            <div class="w60">本次ALT：<input style="width:30px;" ng-disabled="data.iHBVSick!=1" ng-model="data.ATL">U/L
+            </div>
+            <div class="w50">抗-HBc IgM1:1000检测结果：
+                <label><input type='radio' value='0' ng-disabled="data.iHBVSick!=1" ng-model="data.iHBc">阳性</label>
+                <label><input type='radio' value='1' ng-disabled="data.iHBVSick!=1" ng-model="data.iHBc">阴性</label>
+                <label><input type='radio' value='2' ng-disabled="data.iHBVSick!=1" ng-model="data.iHBc">未测</label>
+            </div>
+            <div class="w50">肝穿刺检测结果：
+                <label><input type='radio' value='2' ng-disabled="data.iHBVSick!=1" ng-model="data.iLiver">急性病变</label>
+                <label><input type='radio' value='1' ng-disabled="data.iHBVSick!=1" ng-model="data.iLiver">慢性病变</label>
+                <label><input type='radio' ng-disabled="data.iHBVSick!=1" value='0' ng-model="data.iLiver">未测</label>
+            </div>
+            <div class="w100">恢复期血清HBsAg阴转,抗-HBs阳转:
+                <label><input type='radio' value='1' ng-disabled="data.iHBVSick!=1"
+                              ng-model="data.iHBsAgChange">是</label>
+                <label><input type='radio' value='2' ng-disabled="data.iHBVSick!=1"
+                              ng-model="data.iHBsAgChange">否</label>
+                <label><input type='radio' value='0' ng-disabled="data.iHBVSick!=1"
+                              ng-model="data.iHBsAgChange">未测</label>
+            </div>
+        </div>
+        <div class="group">
+            <div style="width:25%;">订正前病名：<input style="width:100px;" ng-model="data.sSickName_Init"></div>
+            <div style="width:25%;">退卡原因：<input style="width:100px;" ng-model="data.sBackReason"></div>
+            <div style="width:25%;">报告单位：<input style="width:100px;" ng-model="data.sReportUnit"></div>
+            <div style="width:25%;">联系电话：<input style="width:100px;" ng-model="data.sUnitLinkPhone"></div>
+            <div style="width:25%;">报告医生：<input style="width:100px;" ng-model="data.sReportDoctor"></div>
+            <div style="width:25%;">填卡日期：<input style="width:100px;" ng-model="data.dReportDate" ui-date style="width:120px"></div>
+            <div class="w100">备注：<input style="width:800px;" ng-model="data.sMemo"></div>
+        </div>
+    </div>
+    <div class='buttons'>
+        <a id='btn_save' class="btn" ng-click="save()">确定</a>
+        <a class="btn" ng-click="exit()">取消</a>
+    </div>
+</div>
+<script src="/js/angularjs/moment.min.js"></script>
+<script src="/js/util/util.js"></script>
+<script type='text/javascript' src='/dwr/engine.js'></script>
+<script type='text/javascript' src='/dwr/util.js'></script>
+<script src="/js/angularjs/bootstrap/widgets.js"></script>
+<script type='text/javascript' src='/dwr/interface/InfectionReportService.js'></script>
+<script type="text/javascript" src="/js/angularjs/jquery/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="/js/angularjs/jqueryui/js/jquery-ui-1.10.2.custom.min.js"></script>
+<script type="text/javascript" src="/js/angularjs/jqueryui/jquery-ui-zh-CN.js"></script>
+<script src="/js/angularjs/select2/select2.js"></script>
+<script src="/js/angularjs/angular.min.js"></script>
+<script src="/js/angularjs/ui/build/angular-ui.min.js"></script>
+<script src="/js/angularjs/bootstrap/ui-bootstrap-tpls-0.2.0.js"></script>
+<script type="text/javascript" src="/js/angularjs/jquery.mask.min.js"></script>
+<script src="/js/angularjs/controllers/directives.js"></script>
+<script src="infectious.edit.js"></script>
+</body>
+</html>

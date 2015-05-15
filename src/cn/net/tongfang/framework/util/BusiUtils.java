@@ -20,9 +20,12 @@ import com.google.gson.GsonBuilder;
 public class BusiUtils {
 	private static Pattern p1 = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
 	private static Pattern p2 = Pattern.compile("\\d{8}"); 
-	private static Pattern p3 = Pattern.compile("\\d{14}"); 
+	private static Pattern p3 = Pattern.compile("\\d{13}");
+	public static Pattern p4 = Pattern.compile("\\w{3} \\w{3} \\d{2} \\d{4} \\d{2}:\\d{2}:\\d{2} GMT\\+0800 \\(中国标准时间\\)");
+
 	private static SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
 	private static SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd");
+	private static SimpleDateFormat sdf4 = new SimpleDateFormat("EEE MMM dd yyyy hh:mm:ss");
 	/**
 	 * 截去字符串结尾的特征串
 	 * @param s
@@ -50,8 +53,16 @@ public class BusiUtils {
 			long time = Long.parseLong(datestr);
 			return  new Timestamp(time);
 		}
+		if(p4.matcher(datestr).matches()){
+			return new Timestamp(sdf4.parse(datestr).getTime());
+		}
 		return null;
 	}
+
+	public static boolean isDate(String datestr) throws Exception{
+		return p1.matcher(datestr).matches() || p2.matcher(datestr).matches()|| p3.matcher(datestr).matches() || p4.matcher(datestr).matches();
+	}
+
 	public static String format(Date d){
 		return sdf1.format(d);
 	}
