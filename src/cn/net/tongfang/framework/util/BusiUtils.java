@@ -20,7 +20,7 @@ import com.google.gson.GsonBuilder;
 public class BusiUtils {
 	private static Pattern p1 = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
 	private static Pattern p2 = Pattern.compile("\\d{8}"); 
-	private static Pattern p3 = Pattern.compile("\\d{13}");
+	private static Pattern p3 = Pattern.compile("\\d{13}|\\d{12}");
 	public static Pattern p4 = Pattern.compile("\\w{3} \\w{3} \\d{2} \\d{4} \\d{2}:\\d{2}:\\d{2} GMT\\+0800 \\(中国标准时间\\)");
 
 	private static SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");

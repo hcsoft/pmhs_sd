@@ -155,6 +155,7 @@ select {
     border-top: none;
     padding:10px;
     box-sizing: border-box;
+    border-collapse: collapse;
 }
 .group.enabled{
 

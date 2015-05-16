@@ -8,7 +8,7 @@
     <link href="/js/angularjs/select2/select2.css" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="infectious.show.css">
 <body ng-cloak>
-<div style="width:900px;margin:0 auto;background-color: #fff;height:870px;">
+<div style="width:900px;margin:0 auto;background-color: #fff;height:900px;">
 
     <div class="content inputtable">
         <div style="width:100%;text-align: center;"><h3>中华人民共和国传染病报告卡</h3></div>
@@ -204,9 +204,14 @@
             <div style="width:25%;">填卡日期：<input style="width:100px;" ng-model="data.dReportDate" ui-date style="width:120px"></div>
             <div class="w100">备注：<input style="width:800px;" ng-model="data.sMemo"></div>
         </div>
+        <div class="group check" >
+            <div style="width:25%;">审核人：<input style="width:100px;" ng-model="data.sCheckPerson"></div>
+            <div style="width:25%;">审核日期：<input style="width:100px;" ng-model="data.dCheckDate" ui-date style="width:120px"></div>
+        </div>
     </div>
     <div class='buttons'>
         <!--<a id='btn_save' class="btn" ng-click="save()">确定</a>-->
+        <a class="btn" ng-show="data.iState == 3" ng-click="check()">审核</a>
         <a class="btn" ng-click="exit()">关闭</a>
     </div>
 </div>

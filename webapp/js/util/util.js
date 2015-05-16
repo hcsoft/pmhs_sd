@@ -111,6 +111,24 @@ function hcsoftScope(preid, queryid) {
             cfg.splice(idx, 0, obj);
             cm.setConfig(cfg);
         },
+        setColRender: function (idx, func) {
+            var cm = this.cmp('query.grid').getColumnModel();
+            var cfg = cm.getColumnsBy(function () {
+                return true;
+            });
+            cfg[idx]['renderer']=func ;
+            cm.setConfig(cfg);
+        },
+        setColMapRender: function (idx, map) {
+            var cm = this.cmp('query.grid').getColumnModel();
+            var cfg = cm.getColumnsBy(function () {
+                return true;
+            });
+            cfg[idx]['renderer']= function(value, cellobj, row, idx){
+                return map[value];
+            } ;
+            cm.setConfig(cfg);
+        },
         addParams: function (idx, obj) {
             var tbar = this.cmp('mainpanel').getTopToolbar();
             tbar.splice(idx, 0, obj);
