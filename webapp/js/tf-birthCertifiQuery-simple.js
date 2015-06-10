@@ -5,21 +5,21 @@ Ext.tf.BirthCertifiQueryPanel = Ext.extend(Ext.Panel,{
 	pageSize : 15,
 	layout : 'fit',
 	recordId : 'id',
-	
+
 	readerConfig : [],
 	gridCmConfig : [],
 	queryUrl : Ext.emptyFn,
 	printUrl : Ext.emptyFn,
-	
+
 	initComponent: function(){
 		this.build();
 		Ext.tf.BirthCertifiQueryPanel.superclass.initComponent.call(this);
 	},
-	
+
 	build : function(){
 		this.items = [ this.createPanel() ];
 	},
-	
+
 	getParams : function(){
 		var certifiId = Ext.getCmp('TCertifiVal').getValue();
 		var childName = Ext.getCmp('TChildNameVal').getValue();
@@ -50,7 +50,7 @@ Ext.tf.BirthCertifiQueryPanel = Ext.extend(Ext.Panel,{
 		console.log(condition);
 		return condition;
 	},
-	
+
 	load : function(isReset){
 		if(isReset){
 			this.pagingBar.changePage(1);
@@ -58,8 +58,8 @@ Ext.tf.BirthCertifiQueryPanel = Ext.extend(Ext.Panel,{
 //		this.grid.getStore().reload();
 //	    this.doLayout(true);
 	},
-	
-	createPanel : function(){		
+
+	createPanel : function(){
 		var topPanel = new Ext.Panel({
 			region : 'north',
 			tbar : [{
@@ -89,7 +89,7 @@ Ext.tf.BirthCertifiQueryPanel = Ext.extend(Ext.Panel,{
 							    }
 								data.push(convertedData);
 							});
-							
+
 							printDataExportObj.printBirth(data,0,printDataExportObj.initDateRange('TInputDateStartVal','TInputDateEndVal'));
 						}.createDelegate(this)
 			        },{
@@ -114,6 +114,131 @@ Ext.tf.BirthCertifiQueryPanel = Ext.extend(Ext.Panel,{
 							window.location.href = data;
 						}
 	        		});
+	        	}.createDelegate(this)
+			},{
+				text : '导出DBF',
+				iconCls : 'dataExportbg',
+				handler : function(){
+					var dialog = new Ext.Window({
+						width: 350,
+						height: 300,
+						title: 'DBF文件导出',
+						modal: true,
+						items: [
+                            {
+                                xtype  : "panel",
+                                layout : "form",
+                                bodyStyle : 'padding:5px',
+                                labelWidth : '100px;',
+                                border : true,
+                                items : [{
+                                    fieldLabel : '日期范围',
+                                    id:'DateRange',
+                                    xtype : 'datefield',
+                                    format : 'Ym',
+                                    width : 100
+                                }]
+                            },
+                            {
+                                xtype  : "panel",
+                                layout : "form",
+                                bodyStyle : 'padding:5px',
+                                labelWidth : '100px;',
+                                border : true,
+                                items : [{
+                                    fieldLabel : '医疗机构名称',
+                                    id:'DBF_USERNAME',
+                                    xtype : 'textfield',
+                                    width : 200
+                                }]
+                            },{
+                                xtype  : "panel",
+                                layout : "form",
+                                bodyStyle : 'padding:5px',
+                                labelWidth : '100px;',
+                                border : true,
+                                items : [{
+                                    fieldLabel : '单位负责人',
+                                    id:'JG_DWFZR',
+                                    xtype : 'textfield',
+                                    width : 100
+                                }]
+                            },{
+                                xtype  : "panel",
+                                layout : "form",
+                                bodyStyle : 'padding:5px',
+                                labelWidth : '100px;',
+                                border : true,
+                                items : [{
+                                    fieldLabel : '填表人',
+                                    id:'JG_TBR',
+                                    xtype : 'textfield',
+                                    width : 100
+                                }]
+                            },{
+                                xtype  : "panel",
+                                layout : "form",
+                                bodyStyle : 'padding:5px',
+                                labelWidth : '100px;',
+                                border : true,
+                                items : [{
+                                    fieldLabel : '联系电话',
+                                    id:'JG_LXDH',
+                                    xtype : 'textfield',
+                                    width : 100
+                                }]
+                            },
+                            {
+                                xtype  : "panel",
+                                layout : "form",
+                                bodyStyle : 'padding:5px',
+                                labelWidth : '100px;',
+                                border : true,
+                                items : [{
+                                    fieldLabel : '报出日期',
+                                    id:'JG_BCRQ',
+                                    xtype : 'datefield',
+                                    format : 'Ymd',
+                                    width : 100
+                                }]
+                            }
+                        ],
+                        bbar:[{text : '数据导出',
+                            iconCls : 'dataExportbg',
+                            handler : function(){
+                                var daterange = Ext.util.Format.date(Ext.getCmp("DateRange").getValue(),'Ym');
+
+
+                                var DBF_USERNAME = Ext.getCmp("DBF_USERNAME").getValue();
+                                var JG_DWFZR = Ext.getCmp("JG_DWFZR").getValue();
+                                var JG_TBR = Ext.getCmp("JG_TBR").getValue();
+                                var JG_LXDH = Ext.getCmp("JG_LXDH").getValue();
+                                var JG_BCRQ = Ext.util.Format.date(Ext.getCmp("JG_BCRQ").getValue(),"Ymd");
+                                var data = [
+                                    {value:daterange,text:'日期范围不能为空'},
+                                    {value:DBF_USERNAME,text:'医疗机构名称不能为空'},
+                                    {value:JG_DWFZR,text:'单位负责人不能为空'},
+                                    {value:JG_TBR,text:'填表人不能为空'},
+                                    {value:JG_LXDH,text:'联系电话不能为空'},
+                                    {value:JG_BCRQ,text:'报出日期不能为空'}
+                                ];
+                                for (var i= 0;i<data.length;i++){
+                                    if(Ext.isEmpty(data[i].value)){
+                                        Ext.Msg.alert('提示', data[i].text);
+                                        return;
+                                    }
+                                }
+                                console.log(daterange,DBF_USERNAME,JG_DWFZR ,JG_TBR,JG_LXDH,JG_BCRQ);
+                                DataExportService.saveBirthDataToDBF(daterange,DBF_USERNAME,JG_DWFZR ,JG_TBR,JG_LXDH,JG_BCRQ,function(data){
+                                    if(data!=null){
+                                        window.location.href = data;
+                                    }
+                                });
+                            }.createDelegate(this)
+                        }]
+                    });
+					dialog.show();
+
 	        	}.createDelegate(this)
 			}],
 			layout : 'fit',
@@ -147,7 +272,7 @@ Ext.tf.BirthCertifiQueryPanel = Ext.extend(Ext.Panel,{
 									hasEmptyHeader : true,
 									minListWidth : 200,
 									width : 150
-								}]	
+								}]
 					         },
 					         Component.createLabel('LChildBirthTitle','LChildBirthTitle',200,42,'出生日期'),
 					         Component.createDatefield('TChildBirthVal','TChildBirthVal',250,40,'Y-m-d',100,null),
@@ -161,13 +286,13 @@ Ext.tf.BirthCertifiQueryPanel = Ext.extend(Ext.Panel,{
 				        	 Component.createCheckBox('CArchivedBirthCertifi','CArchivedBirthCertifi',0,50,'已归档',true,0,null)],60,70)]
 			}]
 		});
-		
+
 		var reader = new Ext.data.JsonReader({
 			totalProperty : 'totalSize',
 			root : 'data',
 			id : this.recordId
 		},Ext.data.Record.create(this.readerConfig));
-		
+
 		var store = new Ext.data.Store({
 			proxy : new Ext.ux.data.DWRProxy({
 				dwrFunction : this.queryUrl,
@@ -182,7 +307,7 @@ Ext.tf.BirthCertifiQueryPanel = Ext.extend(Ext.Panel,{
 			}),
 			reader : reader
 		});
-		
+
 		this.pagingBar = new Ext.PagingToolbar({
 			pageSize : this.pageSize,
 			displayMsg : '{0}-{1} of {2}',
@@ -190,7 +315,7 @@ Ext.tf.BirthCertifiQueryPanel = Ext.extend(Ext.Panel,{
 			emptyMsg : '没有记录',
 			store : store
 		});
-		
+
 		this.grid = new Ext.grid.GridPanel({
 			id : 'birthCertifiGrid',
 			layout : 'fit',
