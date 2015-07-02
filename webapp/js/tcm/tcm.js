@@ -83,12 +83,12 @@ Ext.tcm.tcmQuery = new Ext.Panel({
 	}, '-', '录入日期：', {
 		xtype : 'datefield',
 		id : 'tcmQuery.query.startdatefield',
-		format : 'Y-m-d',
+		format : 'Ymd',
 	// value : new Date()
 	}, "至", {
 		xtype : 'datefield',
 		id : 'tcmQuery.query.enddatefield',
-		format : 'Y-m-d',
+		format : 'Ymd',
 	// value : new Date()
 	}, "-", {
 		text : '查询',

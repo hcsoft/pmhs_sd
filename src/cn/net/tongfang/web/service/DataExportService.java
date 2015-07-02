@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import cn.net.tongfang.web.util.DbfUtil;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
@@ -32,6 +33,10 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
+import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.handlers.ArrayHandler;
+import org.apache.commons.dbutils.handlers.ArrayListHandler;
+import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -39,6 +44,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
+import org.springframework.orm.hibernate3.SessionFactoryUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -2737,6 +2743,124 @@ public class DataExportService extends HibernateDaoSupport {
 			fileOut.close();
 			return getDownloadURL() + fileName;
 		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
+	}
+
+	public String saveBirthDataToDBF(String month ,String username , String JG_DWFZR ,String JG_TBR , String JG_LXDH ,String JG_BCRQ) throws Exception{
+		TaxempDetail user = cn.net.tongfang.framework.security.SecurityManager
+				.currentOperator();
+
+		String sql = " select  "+
+				"'"+username+"' ,"+
+				"'1',"+
+				"a.motherName,"+
+				"b.fileno,"+
+				"hf.BuildDate,"+
+				"'',"+
+				"'1',"+
+				"a.MotherIdCard,"+
+				"pf.Birthday,"+
+				" case when a.MotherNationality ='中国' then 'CHN' else '' end ,"+
+				" case when CHARINDEX('汉',a.MotherNation)>0   then '01' else '99' end,"+
+				"a.Province,"+
+				"a.City,"+
+				"a.County,"+
+				"'530521',"+
+				"a.Province,"+
+				"a.City,"+
+				"a.County,"+
+				"'530521',"+
+				"case when left(b.diagnosis,1) ='G' and ISNUMERIC(substring(b.diagnosis,2,1)) =1 then convert(int,substring(b.diagnosis,2,1)) else 1 end ,"+
+				"case when left(b.diagnosis,1) ='G' and ISNUMERIC(substring(b.diagnosis,4,1)) =1 then convert(int,substring(b.diagnosis,4,1)) else 1 end ,"+
+				"case when b.criticalWoman = '是' then '1' else '2' end,"+
+				"'1',"+
+				"case when b.ChildbirthWay = '顺产' then '1' else  '2'  end ,"+
+				"convert(date,convert(varchar,b.ChildbirthYear)+'-'+convert(varchar,b.Childbirthmonth)+'-'+convert(varchar,b.Childbirthday)),"+
+				"case when a.sex ='男' then '1' when a.sex = '女' then '2' else '9' end,"+
+				"case when b.BabySurvive = '活产' then '1' else '2' end ,"+
+				"case when ISNUMERIC(replace(b.Apgar01,'分','') ) =1 then  replace(b.Apgar01,'分','') else null end , "+
+				"null,"+
+				"null,"+
+				"null,"+
+				"null,"+
+				"null,"+
+				"null,"+
+				"null,"+
+				"null,"+
+				"null,"+
+				"'"+JG_DWFZR+"',"+
+				"'"+JG_TBR+"',"+
+				"'"+JG_LXDH+"',"+
+				" convert(date,'"+JG_BCRQ+"') "+
+				" from BirthCertificate a  , ChildBirthRecord b " +
+				" left join healthfile hf on b.fileno = hf.fileno " +
+				" left join PersonalInfo pf on b.fileno = pF.fileno "+
+				" where a.CertifiID = b.CertifiID " +
+				" and a.InputPersonId in (select loginname from sam_taxempcode where org_id = "+user.getOrgId()+" ) " +
+				" and  a.InputDate >= '"+month+"01' " +
+				" and a.InputDate < dateadd(month,1,'"+month+"01')" +
+				" and a.IsSupply = 0 and a.IsChanged is null   " +
+				" and a.IsEffectived In (2,4) ";
+//
+//		sql = " select  "+
+//				"'"+username+"' ,"+
+//				"'1',"+
+//				"a.motherName,"+
+//				"b.fileno,"+
+//				"hf.BuildDate,"+
+//				"'',"+
+//				"'1',"+
+//				"a.MotherIdCard,"+
+//				"pf.Birthday,"+
+//				" a.MotherNationality ,"+
+//				" a.MotherNation,"+
+//				"a.Province,"+
+//				"a.City,"+
+//				"a.County,"+
+//				"'530521',"+
+//				"a.Province,"+
+//				"a.City,"+
+//				"a.County,"+
+//				"'530521',"+
+//				"case when left(b.diagnosis,1) ='G' and ISNUMERIC(substring(b.diagnosis,2,1)) =1 then convert(int,substring(b.diagnosis,2,1)) else 1 end ,"+
+//				"case when left(b.diagnosis,1) ='G' and ISNUMERIC(substring(b.diagnosis,4,1)) =1 then convert(int,substring(b.diagnosis,4,1)) else 1 end ,"+
+//				"case when b.criticalWoman = '是' then '1' else '2' end,"+
+//				"'1',"+
+//				"case when b.ChildbirthWay = '顺产' then '1' else  '2'  end ,"+
+//				"convert(date,convert(varchar,b.ChildbirthYear)+'-'+convert(varchar,b.Childbirthmonth)+'-'+convert(varchar,b.Childbirthday)),"+
+//				"  a.sex ,"+
+//				"case when b.BabySurvive = '活产' then '1' else '2' end ,"+
+//				"case when ISNUMERIC(replace(b.Apgar01,'分','') ) =1 then  replace(b.Apgar01,'分','') else null end , "+
+//				"null,"+
+//				"null,"+
+//				"null,"+
+//				"null,"+
+//				"null,"+
+//				"null,"+
+//				"null,"+
+//				"null,"+
+//				"null,"+
+//				"'"+JG_DWFZR+"',"+
+//				"'"+JG_TBR+"',"+
+//				"'"+JG_LXDH+"',"+
+//				" convert(date,'"+JG_BCRQ+"') "+
+//				" from BirthCertificate a  , ChildBirthRecord b " +
+//				" left join healthfile hf on b.fileno = hf.fileno " +
+//				" left join PersonalInfo pf on b.fileno = pF.fileno "+
+//				" where a.CertifiID = b.CertifiID " +
+//				" and a.InputPersonId in (select loginname from sam_taxempcode where org_id = "+user.getOrgId()+" ) " +
+//				"and  a.InputDate >= '"+month+"01' " +
+//				"and a.InputDate < dateadd(month,1,'"+month+"01')" +
+//				" and a.IsSupply = 0 and a.IsChanged is null   " +
+//				" and a.IsEffectived In (2,4) ";
+
+		try {
+			QueryRunner run = new QueryRunner(SessionFactoryUtils.getDataSource(getSessionFactory()));
+			List data = run.query(sql, new ArrayListHandler());
+			return this.getDownloadURL() + DbfUtil.writeDbf(data);
+		}catch(Exception ex){
 			ex.printStackTrace();
 			throw ex;
 		}

@@ -594,5 +594,12 @@
 		<dwr:remote javascript="TaskService"> <dwr:filter class="cn.net.tongfang.web.util.DWRTimeoutFilter"/></dwr:remote>
 		<aop:scoped-proxy />
 	</bean>
-	
+
+	<bean id="CommonQueryService" class="cn.net.tongfang.web.service.commonquery.CommonQueryService">
+		<aop:scoped-proxy />
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="sysInfos" ref="systemInformationUtils"></property>
+		<dwr:remote javascript="CommonQueryService" ><dwr:filter class="cn.net.tongfang.web.util.DWRTimeoutFilter"/></dwr:remote>
+	</bean>
+
 </beans>

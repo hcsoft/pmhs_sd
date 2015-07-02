@@ -1212,6 +1212,7 @@ ModuleMgr.register = function(mod) {
   
   
   //mod.width = '99%';
+
 		Ext.getCmp("tabbody").register(mod);
 //	if(mod.doLayout){
 //		mod.doLayout();
