@@ -10,7 +10,8 @@ $(function(){
 				console.log(json);
 				if(json.id != undefined){
 					var id = json.id;
-					PrintHealthFileAndExamClass.printMedicalExam(id);
+//					PrintHealthFileAndExamClass.printMedicalExam(id);
+					PrintHealthFileAndExamClass.printMediaExam(id);
 				}
 			});
 		}

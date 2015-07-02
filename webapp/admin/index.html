@@ -53,6 +53,7 @@
 	href="../resources/multiselect.css" />
 <link rel="stylesheet" type="text/css" href="/css/itax.css" />
 <script type="text/javascript" src="../js/Utils.js"></script>
+<script type="text/javascript" src="../js/print-healthfile-exam.js"></script>
 <script type="text/javascript" src="../js/Method.js"></script>
 
 <script type="text/javascript" src="../js/ext/ext-base.js"></script>
@@ -72,6 +73,16 @@
 <script type='text/javascript' src='/dwr/interface/OptionProvider.js'></script>
 <script type='text/javascript' src='/dwr/interface/UserService.js'></script>
 <script type='text/javascript' src='/dwr/interface/summaryService.js'></script>
+<script type='text/javascript' src='/dwr/interface/FileNumSearch.js'></script>
+<script type='text/javascript' src='/dwr/interface/BabyVisitService.js'></script>
+<script type='text/javascript'
+	src='/dwr/interface/ChildrenMediExamService.js'></script>
+<script type='text/javascript'
+	src='/dwr/interface/FirstVistBeforeBornService.js'></script>
+<script type='text/javascript'
+	src='/dwr/interface/VisitBeforeBornService.js'></script>
+<script type='text/javascript'
+	src='/dwr/interface/VisitAfterBornService.js'></script>
 <script type='text/javascript' src='/dwr/interface/printerService.js'></script>
 <script type='text/javascript' src='/dwr/interface/loginOffService.js'></script>
 <script type='text/javascript' src='/dwr/interface/CommonExamService.js'></script>
@@ -86,13 +97,14 @@
 	src='/dwr/interface/VaccinationService.js'></script>
 <script type='text/javascript'
 	src='/dwr/interface/SmsService.js'></script>
+<script type='text/javascript'
+	src='/dwr/interface/ChildrenMediExam36Service.js'></script>
 <script type='text/javascript' src='/dwr/interface/MetaProvider.js'></script>
 <script type='text/javascript' src='/dwr/interface/CommonExamService.js'></script>
 <script type='text/javascript' src='/dwr/interface/TcmService.js'></script>
 
 <script type="text/javascript" src="../js/ext/dwrproxy.js"></script>
-<script type="text/javascript" src="../js/print-healthfile-exam.js"></script>
-<script type="text/javascript" src="../js/ext/DwrTreeLoader.js"></script>
+<script type="text/javascript" src="../js/print-healthfile-exam.js"></script><script type="text/javascript" src="../js/ext/DwrTreeLoader.js"></script>
 <script type="text/javascript" src="../js/jsLoader.js"></script>
 <script type="text/javascript" src="../js/FormSetValues.js"></script>
 <script type="text/javascript" src="../js/TabCloseMenu.js"></script>
@@ -388,6 +400,7 @@ table.x-date-inner {
 <link rel="shortcut icon" href="/resources/logo/pmhs_title.png">
 </head>
 <body>
+	<div id="printInformationContaint" style="display:none;"></div>
 	<div id="containerForm">
 		<div id="north">
 			<select style="float: right; color: gray;"

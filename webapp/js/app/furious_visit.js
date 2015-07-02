@@ -8,6 +8,8 @@ app.furiousVisitPanel = new Ext.tf.HealthPanel({
     recordPk : 'id',
     detailUrl: '/furious_visit.html',
     panelId : 'app.furiousVisitPanel',
+    isPrintChildrenExam : true,
+	childrenPrintType : 7,
     readerConfig : [
                     {name:'execOrgName', mapping: 'org.name'},
                     {name:'id', mapping: 'furiousVisit.id'},

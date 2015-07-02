@@ -8,6 +8,8 @@ app.t2dmVisitPanel = new Ext.tf.HealthPanel({
     recordPk : 'id',
     detailUrl: '/t2dm_visit.html',
     panelId : 'app.t2dmVisitPanel',
+    isPrintChildrenExam : true,
+	childrenPrintType : 6,
     readerConfig : [
                     {name:'execOrgName', mapping: 'org.name'},
                     {name:'id', mapping: 'diab.id'},

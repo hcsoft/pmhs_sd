@@ -11,6 +11,8 @@ app.childexam36Panel = new Ext.tf.HealthPanel({
 	detailUrl : '/childexam3_6.html',
 	visitDoctor : 'visitDoctor',
 	panelId : 'app.childexam36Panel',
+	isPrintChildrenExam : true,
+	childrenPrintType : 4,
 	readerConfig : [ {
 		name : 'execOrgName',
 		mapping : 'org.name'

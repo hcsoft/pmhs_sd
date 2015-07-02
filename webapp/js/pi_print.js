@@ -2,7 +2,8 @@ $(function(){
 	$('.toolbar').append('<button class="printPrev btnprint showWhenModify printHealthFile"><img title="打印" src="../image/print_reversal_32_32.png"/>打印</button>');
 	$('.printHealthFile').click(function(){
 		var fileNo = $('.personId').html();
-		PrintHealthFileAndExamClass.printHealthFile(fileNo);
+//		PrintHealthFileAndExamClass.printHealthFile(fileNo);
+		PrintHealthFileAndExamClass.printHealthFileOther(fileNo);
 	});
 // var sidea = $( ".side-a" ).overlay({api:true});
 //	var sideb = $( ".side-b" ).overlay({api:true});

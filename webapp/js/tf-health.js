@@ -26,6 +26,10 @@ Ext.tf.HealthPanel = Ext.extend(Ext.Panel, {
 	isFinishGestation : false,
 	isPrintHealthFile : false,
 	isPrintMedicalExam : false,
+	isPrintChildrenExam : false,
+	isPrintWomanExam : false,
+	childrenPrintType : -1,
+	womanPrintType : -1,
 	isWomanExam : false,
 	// height:700,
 	// 是否需要在最末级才能增加？
@@ -397,7 +401,9 @@ Ext.tf.HealthPanel = Ext.extend(Ext.Panel, {
 					var selections = this.grid.getSelections();
 					if(selections.length == 1){
 						var fileNo = selections[0].data.fileNo;
-						PrintHealthFileAndExamClass.printHealthFile(fileNo);
+//						console.log(PrintHealthFileAndExamClass.formatNullOrEmpty(''));
+						
+						PrintHealthFileAndExamClass.printHealthFileOther(fileNo);
 					}else{
 						showInfoObj.Infor('请选择打印的档案！');
 					}
@@ -414,13 +420,73 @@ Ext.tf.HealthPanel = Ext.extend(Ext.Panel, {
 					var selections = this.grid.getSelections();
 					if(selections.length == 1){
 						var id = selections[0].data.id;
-						PrintHealthFileAndExamClass.printMedicalExam(id);
+//						PrintHealthFileAndExamClass.printMedicalExam(id);
+						PrintHealthFileAndExamClass.printMediaExam(id);
 					}else{
 						showInfoObj.Infor('请选择打印的健康体检记录！');
 					}
 				}.createDelegate(this)
 			});
 		}
+		
+		var printChildrenExam = '';
+		//打印儿童体检记录
+		if(this.isPrintChildrenExam){
+			printChildrenExam = new Ext.Action({
+				text : '打印',
+				iconCls : 'printbg',
+				handler : function(){
+					var selections = this.grid.getSelections();
+					if(selections.length == 1){
+						var id = selections[0].data.id;
+						if(this.childrenPrintType == '1'){
+							PrintHealthFileAndExamClass.printBabyVisit(id);
+						}else if(this.childrenPrintType == '2'){
+							PrintHealthFileAndExamClass.printChildrenExam(id);
+						}else if(this.childrenPrintType == '3'){
+							PrintHealthFileAndExamClass.printChildrenExam1_2(id);
+						}else if(this.childrenPrintType == '4'){
+							PrintHealthFileAndExamClass.printChildrenExam3_6(id);
+						}else if(this.childrenPrintType == '5'){
+							PrintHealthFileAndExamClass.printHypVisitExam(id);
+						}else if(this.childrenPrintType == '6'){
+							PrintHealthFileAndExamClass.printT2dmVisitExam(id);
+						}else if(this.childrenPrintType == '7'){
+							PrintHealthFileAndExamClass.printFuriousVisitExam(id);
+						}
+					}else{
+						showInfoObj.Infor('请选择打印的儿童健康体检记录！');
+					}
+				}.createDelegate(this)
+			});
+		}
+		
+		var printWomanExam = '';
+		//打印孕产妇体检记录
+		if(this.isPrintWomanExam){
+			printWomanExam = new Ext.Action({
+				text : '打印',
+				iconCls : 'printbg',
+				handler : function(){
+					var selections = this.grid.getSelections();
+					if(selections.length == 1){
+						var id = selections[0].data.id;
+						if(this.womanPrintType == '1'){
+							PrintHealthFileAndExamClass.printFirstVisitExam(id);
+						}else if(this.womanPrintType == '2'){
+							PrintHealthFileAndExamClass.printVisitBeforeBornExam(id);
+						}else if(this.womanPrintType == '3'){
+							PrintHealthFileAndExamClass.printVisitAfterBornExam(id);
+						}else if(this.womanPrintType == '4'){
+							PrintHealthFileAndExamClass.printVisitAfterBornExam42(id);
+						}
+					}else{
+						showInfoObj.Infor('请选择打印的孕产妇随访记录！');
+					}
+				}.createDelegate(this)
+			});
+		}
+		
 		var advancedF = null;
 		var dataExport = new Ext.Action({
 			text : '数据导出',
@@ -691,6 +757,8 @@ Ext.tf.HealthPanel = Ext.extend(Ext.Panel, {
 							}));
 			funcAction.push(printHealthFile);
 			funcAction.push(printMedicalExam);
+			funcAction.push(printChildrenExam);
+			funcAction.push(printWomanExam);
 			funcAction.push('-');
 			funcAction.push(this.combo);
 			funcAction.push(this.filterField);
