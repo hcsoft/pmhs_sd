@@ -47,7 +47,7 @@ angular.module('all', [ 'ui', 'ui.bootstrap' ]).filter('idcard', function() {
 }).filter('checked', function() {
 	return function(input, value) {
 		var width = "18";
-		var list = [value];
+		var list = [];
 		if(value.indexOf("|")>=0){
 			var values = value.split("|");
 			value = values[0];
@@ -55,6 +55,8 @@ angular.module('all', [ 'ui', 'ui.bootstrap' ]).filter('idcard', function() {
 		}
 		if(value.indexOf(",")>=0){
 			list = value.split(",");
+		}else{
+			list = [value];
 		}
 		var flag = false;
 		for(var i = 0 ; i <list.length;i++){
