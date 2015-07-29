@@ -10,6 +10,8 @@ app.babyvisitPanel = new Ext.tf.HealthPanel({
 	recordPk : 'id',
 	detailUrl : '/babyvisit.html',
 	panelId : 'app.babyvisitPanel',
+	isPrintChildrenExam : true,
+	childrenPrintType : 1,
 	// Select A.FileNo 编号,B.Name 姓名,A.Sex 性别,A.Birthday 出生日期,VisitDate 访视日期,
 	// A.NextVisitPlace 下次访视地点,A.NextVisitDate 下次访视日期,VisitDoctor 随访医生,
 	// D.UserName 录入人from BabyVisit A

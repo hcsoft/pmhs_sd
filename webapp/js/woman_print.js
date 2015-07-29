@@ -28,6 +28,19 @@ function getBasicInfo(){
 					'border-top: 1px solid #000;height:25px;line-height:25px;} .headerPrint{width:2.5cm;' +
 					'padding-left:5px;}'+
 					'.contentPrint{width:3cm;padding-left:3px;}</style>';
+			
+			$('.firstVisitPrint1').click(function(){
+				PrintHealthFileAndExamClass.printFirstVisitExam(id);
+			});
+			$('.firstVisitPrint2').click(function(){
+				PrintHealthFileAndExamClass.printVisitBeforeBornExam(id);
+			});
+			$('.firstVisitPrint3').click(function(){
+				PrintHealthFileAndExamClass.printVisitAfterBornExam(id);
+			});
+			$('.firstVisitPrint4').click(function(){
+				PrintHealthFileAndExamClass.printVisitAfterBornExam42(id);
+			});
 			$('.firstVisitPrint').click(function(){
 				getBasicInfo();
 				FirstVistBeforeBornService.getPrintInfo(send,function(data){

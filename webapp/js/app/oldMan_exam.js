@@ -8,6 +8,7 @@ app.oldManExamPanel = new Ext.tf.HealthPanel({
     recordPk : 'id',
     detailUrl: '/medicalExam_old.html',
     panelId : 'app.oldManExamPanel',
+    isPrintMedicalExam : true,
     readerConfig : [
                     {name:'id', mapping: 'medicalExam.id'},
                     {name:'fileNo', mapping: 'file.fileNo'},

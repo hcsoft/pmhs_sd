@@ -95,6 +95,30 @@ function dealData(data,beforeSkull01,beforeSkull02){
 					dealData(data,'exam09','exam10');
 				});
 			});
+			$('.childvisit2').click(function(){
+				PrintHealthFileAndExamClass.printChildrenExam(id);
+			});
+			$('.childvisit3').click(function(){
+				PrintHealthFileAndExamClass.printChildrenExam1_2(id);
+			});
+			$('.childvisit36_1').click(function(){
+				PrintHealthFileAndExamClass.printChildrenExam3_6(id);
+			});
+			$('.babyvisit').click(function(){
+				PrintHealthFileAndExamClass.printBabyVisit(id);
+			});
+			
+			$('.hyp_visit').click(function(){
+				PrintHealthFileAndExamClass.printHypVisitExam(id);
+			});
+			
+			$('.t2dm_visit').click(function(){
+				PrintHealthFileAndExamClass.printT2dmVisitExam(id);
+			});
+			
+			$('.furious_visit').click(function(){
+				PrintHealthFileAndExamClass.printFuriousVisitExam(id);
+			});
 			$('.childBabyVisit_new').click(function(){
                 getBasicInfo();
                 BabyVisitService.getPrintInfo_new(send,function(data){

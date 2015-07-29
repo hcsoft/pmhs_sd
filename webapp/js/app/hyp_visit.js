@@ -8,6 +8,8 @@ app.hypVisitPanel = new Ext.tf.HealthPanel({
     recordPk : 'id',
     detailUrl: '/hyp_visit.html',
     panelId : 'app.hypVisitPanel',
+    isPrintChildrenExam : true,
+	childrenPrintType : 5,
 //    Select A.FileNo 编号,B.Name 姓名,C.sex 性别,C.Birthday 出生日期,A.VisitKind 随访方式,
 //    A.VisitDate 随访日期,A.NextVistDate 下次随访日期,A.VisitDoctor 随访医生,D.UserName 录入人from HypertensionVisit A
 //    left join dbo.HealthFile B on A.FileNo = B.FileNo

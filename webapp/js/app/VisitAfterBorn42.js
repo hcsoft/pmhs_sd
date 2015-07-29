@@ -10,6 +10,8 @@ app.visitAfterBorn42Panel = new Ext.tf.HealthPanel({
     detailUrl: '/visitAfterBorn42.html',
     panelId : 'app.visitAfterBorn42Panel',
     isWomanExam : true,
+    isPrintWomanExam : true,
+    womanPrintType : 4,
     readerConfig : [
                     {name:'execOrgName', mapping: 'org.name'},
                     {name:'id', mapping: 'visit.id'},

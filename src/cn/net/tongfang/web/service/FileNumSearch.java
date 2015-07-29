@@ -1,8 +1,7 @@
 package cn.net.tongfang.web.service;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.sql.Timestamp;import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,18 @@ import java.util.Map;
 import org.hibernate.Query;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import cn.net.tongfang.framework.security.vo.BabyVisit;
 import cn.net.tongfang.framework.security.vo.CfgFilesearch;
+import cn.net.tongfang.framework.security.vo.ChildrenMediExam;
+import cn.net.tongfang.framework.security.vo.ChildrenMediExam36;
+import cn.net.tongfang.framework.security.vo.DiabetesVisit;
+import cn.net.tongfang.framework.security.vo.FirstVistBeforeBorn;
+import cn.net.tongfang.framework.security.vo.FuriousVisit;
+import cn.net.tongfang.framework.security.vo.HealthFile;
+import cn.net.tongfang.framework.security.vo.HypertensionVisit;
+import cn.net.tongfang.framework.security.vo.MedicalExam;
+import cn.net.tongfang.framework.security.vo.VisitAfterBorn;
+import cn.net.tongfang.framework.security.vo.VisitBeforeBorn;
 import cn.net.tongfang.framework.util.EncryptionUtils;
 import cn.net.tongfang.web.service.bo.PagedList;
 
@@ -491,5 +501,60 @@ public class FileNumSearch extends HibernateDaoSupport{
     	if(list.size() > 0)
     		return true;
     	return false;
+    }
+    
+    public HealthFile getHealthFileInfoByWorkId(String type,String id){
+    	if(type.equals("1")){
+    		ChildrenMediExam childrenExam = (ChildrenMediExam)getHibernateTemplate().get(ChildrenMediExam.class, id);
+    		if(childrenExam != null){
+    			return (HealthFile)getHibernateTemplate().get(HealthFile.class, childrenExam.getFileNo());
+    		}
+    	}else if(type.equals("2")){
+    		ChildrenMediExam36 childrenExam = (ChildrenMediExam36)getHibernateTemplate().get(ChildrenMediExam36.class, id);
+    		if(childrenExam != null){
+    			return (HealthFile)getHibernateTemplate().get(HealthFile.class, childrenExam.getFileNo());
+    		}
+    	}else if(type.equals("3")){
+    		BabyVisit childrenExam = (BabyVisit)getHibernateTemplate().get(BabyVisit.class, id);
+    		if(childrenExam != null){
+    			return (HealthFile)getHibernateTemplate().get(HealthFile.class, childrenExam.getFileNo());
+    		}
+    	}else if(type.equals("4")){
+    		FirstVistBeforeBorn womanExam = (FirstVistBeforeBorn)getHibernateTemplate().get(FirstVistBeforeBorn.class, id);
+    		if(womanExam != null){
+    			return (HealthFile)getHibernateTemplate().get(HealthFile.class, womanExam.getFileNo());
+    		}
+    	}else if(type.equals("5")){
+    		VisitBeforeBorn womanExam = (VisitBeforeBorn)getHibernateTemplate().get(VisitBeforeBorn.class, id);
+    		if(womanExam != null){
+    			return (HealthFile)getHibernateTemplate().get(HealthFile.class, womanExam.getFileNo());
+    		}
+    	}else if(type.equals("6")){
+    		VisitAfterBorn womanExam = (VisitAfterBorn)getHibernateTemplate().get(VisitAfterBorn.class, id);
+    		if(womanExam != null){
+    			return (HealthFile)getHibernateTemplate().get(HealthFile.class, womanExam.getFileNo());
+    		}
+    	}else if(type.equals("7")){
+    		HypertensionVisit hypVisit = (HypertensionVisit)getHibernateTemplate().get(HypertensionVisit.class, id);
+    		if(hypVisit != null){
+    			return (HealthFile)getHibernateTemplate().get(HealthFile.class, hypVisit.getFileNo());
+    		}
+    	}else if(type.equals("8")){
+    		DiabetesVisit t2dmVisit = (DiabetesVisit)getHibernateTemplate().get(DiabetesVisit.class, id);
+    		if(t2dmVisit != null){
+    			return (HealthFile)getHibernateTemplate().get(HealthFile.class, t2dmVisit.getFileNo());
+    		}
+    	}else if(type.equals("9")){
+    		FuriousVisit furiousVisit = (FuriousVisit)getHibernateTemplate().get(FuriousVisit.class, id);
+    		if(furiousVisit != null){
+    			return (HealthFile)getHibernateTemplate().get(HealthFile.class, furiousVisit.getFileNo());
+    		}
+    	}else if(type.equals("10")){
+    		MedicalExam medicalExam = (MedicalExam)getHibernateTemplate().get(MedicalExam.class, id);
+    		if(medicalExam != null){
+    			return (HealthFile)getHibernateTemplate().get(HealthFile.class, medicalExam.getFileNo());
+    		}
+    	}
+    	return null;
     }
 }

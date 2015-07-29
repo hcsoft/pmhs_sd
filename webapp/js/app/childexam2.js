@@ -9,6 +9,8 @@ app.childexam2Panel = new Ext.tf.HealthPanel({
 	recordId : 'child.id',
 	recordPk : 'id',
 	detailUrl : '/childexam2.html',
+	isPrintChildrenExam : true,
+	childrenPrintType : 3,
 	panelId : 'app.childexam2Panel',
 	readerConfig : [ {
 		name : 'execOrgName',
