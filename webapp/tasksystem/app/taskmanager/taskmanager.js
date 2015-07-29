@@ -1,7 +1,7 @@
 'use strict';
 
 
-app.controller('TaskManagerCtrl', function ($scope, i18nService, $modal, $log) {
+app.controller('TaskManagerCtrl', function ($scope, i18nService, $modal, $log,cfpLoadingBar) {
     //初始化查询参数
     $scope.query = {cat: null, rule: null, status: ''};
     //设置树参数
@@ -224,10 +224,12 @@ app.controller('TaskManagerCtrl', function ($scope, i18nService, $modal, $log) {
         if($scope.dropdownvalue){
             $scope.query[$scope.dropdown]= $scope.dropdownvalue;
         }
+        cfpLoadingBar.start();
         TaskService.queryLogsnew($scope.query, {
             start: ($scope.gridOptions.paginationCurrentPage - 1) * 20,
             limit: 20
         }, function (data) {
+            cfpLoadingBar.complete()
             $scope.gridOptions.data = data.data;
             $scope.gridOptions.totalItems = data.totalSize;
             $scope.$digest();

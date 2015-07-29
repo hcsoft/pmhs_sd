@@ -24,6 +24,7 @@
     <link href="lib/beyond/css/animate.min.css" rel="stylesheet"/>
     <link href="lib/uigrid/ui-grid.min.css" rel="stylesheet"/>
     <link href="lib/uiselect/select.min.css" rel="stylesheet"/>
+    <link href="lib/loadingbar/loading-bar.min.css" rel="stylesheet"/>
     <link href="css/index.css" rel="stylesheet"/>
     <link rel="stylesheet" media="screen and (max-width:1390px)" href="css/small.css" type="text/css" />
 
@@ -79,7 +80,7 @@
 <%--<script type='text/javascript' src='lib/angular/angular-resource.min.js'></script>--%>
 <script type='text/javascript' src='lib/angular/angular-route.min.js'></script>
 <script type='text/javascript' src='lib/ngbootstrap/ui-bootstrap-tpls-0.12.1.min.js'></script>
-<script type='text/javascript' src='lib/ngbootstrap/ui-bootstrap-tpls-0.12.1.min.js'></script>
+<script type='text/javascript' src='lib/loadingbar/loading-bar.min.js'></script>
 
 <script type='text/javascript' src='lib/uigrid/ui-grid.min.js'></script>
 <script type='text/javascript' src='lib/uiselect/select.min.js'></script>

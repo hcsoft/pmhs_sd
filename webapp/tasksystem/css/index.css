@@ -219,3 +219,14 @@ li.jstree-leaf>a>i.jstree-icon.jstree-themeicon{
 .topbar.navbar{
     z-index:200;
 }
+
+#loading-bar-spinner{
+    left: inherit !important;
+    top:inherit !important;
+    bottom:31px;
+    right:150px;
+}
+#loading-bar .bar{
+    top:inherit !important;
+    bottom:0;
+}
