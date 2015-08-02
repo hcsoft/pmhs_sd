@@ -2256,7 +2256,10 @@ public class ModuleMgr extends HibernateDaoSupport {
 				for (String id : ids) {
 					List<FreeSub> list = session.createQuery("from FreeSub where examid = '"+id+"' and status = 1 ").list();
 					for(FreeSub sub : list){
-						session.createQuery(" update FreeMain set leftnum = leftnum+1 where id.fileno = '"+sub.getFileno()+"' and id.examname ='"+sub.getExamname()+"'").executeUpdate();
+						FirstVistBeforeBorn fb = (FirstVistBeforeBorn)session.get(FirstVistBeforeBorn.class,id);
+						HealthFileMaternal hf = (HealthFileMaternal)getHibernateTemplate().get(HealthFileMaternal.class, fb.getForeignId());
+						int gravity = hf.getGravidity();
+						session.createQuery(" update FreeMain set leftnum = leftnum+1 where id.fileno = '"+sub.getFileno()+"' and id.examname ='"+sub.getExamname()+"' and gravity = "+gravity).executeUpdate();
 						session.delete(sub);
 					}
 				}
@@ -2332,7 +2335,10 @@ public class ModuleMgr extends HibernateDaoSupport {
 				for (String id : ids) {
 					List<FreeSub> list = session.createQuery("from FreeSub where examid = '"+id+"' and status = 1 ").list();
 					for(FreeSub sub : list){
-						session.createQuery(" update FreeMain set leftnum = leftnum+1 where id.fileno = '"+sub.getFileno()+"' and id.examname ='"+sub.getExamname()+"'").executeUpdate();
+						VisitBeforeBorn fb = (VisitBeforeBorn)session.get(VisitBeforeBorn.class,id);
+						HealthFileMaternal hf = (HealthFileMaternal)getHibernateTemplate().get(HealthFileMaternal.class, fb.getForeignId());
+						int gravity = hf.getGravidity();
+						session.createQuery(" update FreeMain set leftnum = leftnum+1 where id.fileno = '"+sub.getFileno()+"' and id.examname ='"+sub.getExamname()+"' and  gravity = "+gravity).executeUpdate();
 						session.delete(sub);
 					}
 				}
