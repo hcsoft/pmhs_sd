@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import cn.net.tongfang.framework.security.vo.*;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -23,18 +24,6 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import cn.net.tongfang.framework.security.SecurityManager;
 import cn.net.tongfang.framework.security.bo.HealthFileQry;
 import cn.net.tongfang.framework.security.demo.service.TaxempDetail;
-import cn.net.tongfang.framework.security.vo.BasicInformation;
-import cn.net.tongfang.framework.security.vo.ExamBaseinfo;
-import cn.net.tongfang.framework.security.vo.ExamExamcfgFileno;
-import cn.net.tongfang.framework.security.vo.FirstVistBeforeBorn;
-import cn.net.tongfang.framework.security.vo.GravidityKey;
-import cn.net.tongfang.framework.security.vo.HealthFile;
-import cn.net.tongfang.framework.security.vo.PersonalInfo;
-import cn.net.tongfang.framework.security.vo.SamModule;
-import cn.net.tongfang.framework.security.vo.SamModuleCategory;
-import cn.net.tongfang.framework.security.vo.SamTaxempcode;
-import cn.net.tongfang.framework.security.vo.SamTaxorgcode;
-import cn.net.tongfang.framework.security.vo.VisitBeforeBorn;
 import cn.net.tongfang.framework.util.CommonConvertUtils;
 import cn.net.tongfang.framework.util.EncryptionUtils;
 import cn.net.tongfang.framework.util.SystemInformationUtils;
@@ -235,10 +224,11 @@ public class VisitBeforeBornService extends
 	}
 
 	// 检查主表是否有数据,如果没有,则新增记录
-	public void checkHasFree(final String fileno, final String examcode) {
+	public void checkHasFree(final String fileno,final String foreignId, final String examcode) {
+		final int gravity = getGravityByFkey(foreignId);
 		List list = getHibernateTemplate().find(
 				" select 1 From FreeMain Where fileNo = '" + fileno
-						+ "' and examname = '" + examcode + "'");
+						+ "' and examname = '" + examcode + "' and gravity = "+gravity);
 		if (list.size() <= 0) {
 			getHibernateTemplate().execute(new HibernateCallback() {
 				public Object doInHibernate(Session session)
@@ -249,20 +239,26 @@ public class VisitBeforeBornService extends
 											+ fileno
 											+ "','"
 											+ examcode
-											+ "', maxnum , maxnum from free_code where code='"
-											+ examcode + "'").executeUpdate();
+											+ "', maxnum , maxnum ,"+gravity+" from free_code where code='"
+											+ examcode + "' ").executeUpdate();
 				}
 
 			});
 		}
 	}
 
+	private int getGravityByFkey(String ForeignId){
+		HealthFileMaternal hf = (HealthFileMaternal)getHibernateTemplate().get(HealthFileMaternal.class,ForeignId);
+		return hf.getGravidity();
+	}
+
 	// 检查是否超出了上限了
-	public boolean checkcanfree(String fileno, String examcode) {
-		checkHasFree(fileno, examcode);
+	public boolean checkcanfree(String fileno,String foreignId, String examcode) {
+		checkHasFree(fileno,foreignId, examcode);
+		int gravity = getGravityByFkey(foreignId);
 		List list = getHibernateTemplate().find(
 				" select 1 From FreeMain Where fileNo = '" + fileno
-						+ "' and examname = '" + examcode + "' and leftnum>0");
+						+ "' and examname = '" + examcode + "' and leftnum>0 and gravity = "+gravity);
 		if (list.size() > 0) {
 			return true;
 		} else {
@@ -270,14 +266,15 @@ public class VisitBeforeBornService extends
 		}
 	}
 
-	public List checkALLcanfree(String fileno, String[] codelist) {
+	public List checkALLcanfree(String fileno,String foreignId, String[] codelist) {
 		List msglist = new ArrayList();
+		int gravity = getGravityByFkey(foreignId);
 		for (int i = 0; i < codelist.length; i++) {
-			checkHasFree(fileno, codelist[i]);
+			checkHasFree(fileno,foreignId, codelist[i]);
 			List list = getHibernateTemplate().find(
 					" select 1 From FreeMain Where fileNo = '" + fileno
 							+ "' and examname = '" + codelist[i]
-							+ "' and leftnum>0");
+							+ "' and leftnum>0 and gravity = "+gravity);
 			if (list.size() <= 0) {
 				msglist.add(freemap.get(codelist[i]) + "已达到免费数量上限!");
 			}
@@ -285,24 +282,25 @@ public class VisitBeforeBornService extends
 		return msglist;
 	}
 
-	public List checkEditfree(String fileno, String examid, String[] codelist,
+	public List checkEditfree(String fileno,String foreignId, String examid, String[] codelist,
 			final boolean[] values,int type) {
 		List msglist = new ArrayList();
+		int gravity = getGravityByFkey(foreignId);
 		for (int i = 0; i < codelist.length; i++) {
-			checkHasFree(fileno, codelist[i]);
+			checkHasFree(fileno,foreignId, codelist[i]);
 			if (values[i]) {
 				List sublist = getHibernateTemplate().find(
 						" select 1 From FreeSub Where fileNo = '" + fileno
 								+ "' and examname = '" + codelist[i]
 								+ "' and examid = '" + examid
-								+ "' and status = 1");
+								+ "' and status = 1 ");
 				if (sublist.size() > 0) {
 					continue;
 				} else {
 					List list = getHibernateTemplate().find(
 							" select 1 From FreeMain Where fileNo = '" + fileno
 									+ "' and examname = '" + codelist[i]
-									+ "' and leftnum>0");
+									+ "' and leftnum>0 and gravity = "+gravity);
 					if (list.size() <= 0) {
 						msglist.add(freemap.get(codelist[i]) + "已达到免费数量上限!");
 					}
@@ -364,15 +362,16 @@ public class VisitBeforeBornService extends
 	}
 
 	// 保存
-	public Object saveFrees(final String fileno, final String[] examcodes,
+	public Object saveFrees(final String fileno ,final  String foreignId, final String[] examcodes,
 			final String examid, final int type) {
 		final String userid = SecurityManager.currentOperator().getUsername();
+		final int gravity = getGravityByFkey(foreignId);
 		return getHibernateTemplate().execute(new HibernateCallback() {
 			public Object doInHibernate(Session session)
 					throws HibernateException, SQLException {
 				for (int i = 0; i < examcodes.length; i++) {
 					final String examcode = examcodes[i];
-					checkHasFree(fileno, examcode);
+					checkHasFree(fileno,foreignId, examcode);
 					String finalid = examid;
 					String id = UUID.randomUUID().toString();
 					session.createSQLQuery(
@@ -383,7 +382,7 @@ public class VisitBeforeBornService extends
 					session.createSQLQuery(
 							"update free_main set leftnum = leftnum -1 Where fileNo = '"
 									+ fileno + "' and examname = '" + examcode
-									+ "' ").executeUpdate();
+									+ "' and gravity = "+gravity).executeUpdate();
 				}
 				return null;
 			}

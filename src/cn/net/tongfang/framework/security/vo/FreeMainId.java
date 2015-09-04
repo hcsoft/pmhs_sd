@@ -10,6 +10,7 @@ public class FreeMainId implements java.io.Serializable {
 
 	private String fileno;
 	private String examname;
+	private Integer gravity;
 
 	// Constructors
 
@@ -18,9 +19,10 @@ public class FreeMainId implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public FreeMainId(String fileno, String examname) {
+	public FreeMainId(String fileno, String examname, Integer gravity) {
 		this.fileno = fileno;
 		this.examname = examname;
+		this.gravity = gravity;
 	}
 
 	// Property accessors
@@ -41,6 +43,14 @@ public class FreeMainId implements java.io.Serializable {
 		this.examname = examname;
 	}
 
+	public Integer getGravity() {
+		return this.gravity;
+	}
+
+	public void setGravity(Integer gravity) {
+		this.gravity = gravity;
+	}
+
 	public boolean equals(Object other) {
 		if ((this == other))
 			return true;
@@ -56,7 +66,10 @@ public class FreeMainId implements java.io.Serializable {
 				&& ((this.getExamname() == castOther.getExamname()) || (this
 						.getExamname() != null
 						&& castOther.getExamname() != null && this
-						.getExamname().equals(castOther.getExamname())));
+						.getExamname().equals(castOther.getExamname())))
+				&& ((this.getGravity() == castOther.getGravity()) || (this
+						.getGravity() != null && castOther.getGravity() != null && this
+						.getGravity().equals(castOther.getGravity())));
 	}
 
 	public int hashCode() {
@@ -66,6 +79,8 @@ public class FreeMainId implements java.io.Serializable {
 				+ (getFileno() == null ? 0 : this.getFileno().hashCode());
 		result = 37 * result
 				+ (getExamname() == null ? 0 : this.getExamname().hashCode());
+		result = 37 * result
+				+ (getGravity() == null ? 0 : this.getGravity().hashCode());
 		return result;
 	}
 

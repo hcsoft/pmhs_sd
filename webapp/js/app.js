@@ -1192,8 +1192,9 @@ $(function(){
 			var inputid = inputitem.attr("id");
 			var examid = inputid.substring(5);//去掉了"free-"的字符串头
 			var fileno = $("#fileNo span").html();
+			var foreignId = $("#foreignId input").val();
 			//如果当前为选中,则判断是否达到最大数量
-			VisitBeforeBornService.checkcanfree(fileno,examid,{async:false,callback:function(data){
+			VisitBeforeBornService.checkcanfree(fileno,foreignId,examid,{async:false,callback:function(data){
 				flag = data;
 			}});
 			if(!flag){
@@ -1216,6 +1217,8 @@ function loadFree(data){
 		console.log(data);
 		var fileno = data.fileNo;
 		var examid = data.id;
+		var foreignId =  data.foreignId;
+
 		VisitBeforeBornService.loadFree(fileno,examid,services.type,{async:false,callback:function(data){
 			for(var i=0 ;i<data.length;i++){
 				console.log("#free-"+data[i]);
@@ -1239,12 +1242,13 @@ function checkFree(send,func){
 	}
 	var msglist;
 	var fileno = send.fileNo;
+	var foreignId = send.foreignId;
 	if(Ext.isEmpty(send.id)){
-		VisitBeforeBornService.checkALLcanfree(fileno,saveids,{async:false,callback:function(data){
+		VisitBeforeBornService.checkALLcanfree(fileno,foreignId,saveids,{async:false,callback:function(data){
 			msglist = data;
 		}});
 	}else{
-		VisitBeforeBornService.checkEditfree(fileno,send.id,free_ids,changevalues,services.type,{async:false,callback:function(data){
+		VisitBeforeBornService.checkEditfree(fileno,foreignId,send.id,free_ids,changevalues,services.type,{async:false,callback:function(data){
 			msglist = data;
 		}});
 	}
@@ -1274,11 +1278,12 @@ function updateFree(id,send,func){
 		}
 	}
 	var fileno = send.fileNo;
+	var foreignId = send.foreignId;
 	if(!Ext.isEmpty(send.id)){
 		VisitBeforeBornService.updateFrees(fileno,free_ids,id,changevalues,services.type,{async:false,callback:function(data){
 		}});
 	}else{
-		VisitBeforeBornService.saveFrees(fileno,saveids,id,services.type,{async:false,callback:function(data){
+		VisitBeforeBornService.saveFrees(fileno,foreignId,saveids,id,services.type,{async:false,callback:function(data){
 		}});
 	}
 }

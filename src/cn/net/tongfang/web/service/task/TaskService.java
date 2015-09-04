@@ -56,6 +56,8 @@ public class TaskService extends HibernateDaoSupport {
     static {
         queryParam.put("name", gs.fromJson("{key:'hf.name',text:'姓名',opt:'like', sql:'\\'%?%\\'',type:'string',inlist:'true' }", Map.class));
         queryParam.put("fileno", gs.fromJson("{key:'info.fileNo',text:'档案编码',opt:'=' , sql:'\\'?\\'',type:'string',inlist:'true' }", Map.class));
+        queryParam.put("cat", gs.fromJson("{key:'vo.parentid',text:'分类',opt:'=' , sql:'\\'?\\'',type:'string',inlist:'false' }", Map.class));
+        queryParam.put("rule", gs.fromJson("{key:'vo.examid',text:'名称',opt:'=' , sql:'\\'?\\'',type:'string',inlist:'false' }", Map.class));
         queryParam.put("idnumber", gs.fromJson("{key:'info.idnumber',text:'身份证号',opt:'=' , sql:'\\'?\\'',type:'string',inlist:'true' }", Map.class));
         queryParam.put("begindate", gs.fromJson("{key:'vo.smsdate',text:'日期起',opt:'>=' , sql:'convert(date,\\'?\\')',type:'date',inlist:'false' }", Map.class));
         queryParam.put("enddate", gs.fromJson("{key:'vo.smsdate',text:'日期止',opt:'<' , sql:'dateadd(day,1,convert(date,\\'?\\'))',type:'date',inlist:'false' }", Map.class));

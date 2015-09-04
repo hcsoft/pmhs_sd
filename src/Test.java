@@ -1,3 +1,6 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -16,33 +19,22 @@ import cn.net.tongfang.framework.util.EncryptionUtils;
 public class Test {
 
 	public static void main(String[] args) {
-		// System.out.println("==================="+(int)'a');
-		// char charcode = 'C';
-		// int flag = 0x01;
-		// System.out.println("==================="+s_enc(charcode,flag));
-		// System.out.println("==================="+s_enc2(charcode,flag));
-		// System.out.println("==================="+s_enc1('1',0x71));
-		// System.out.println("==================="+Integer.toHexString(s_enc1('1',0x71)
-		// ));
-		// System.out.println("==================="+s_denc1(flag,s_enc1(charcode,flag)));
-		// /6D8080 50A3E5 85F81B
-		// System.out.println("==================="+Integer.toHexString(s_enc('1',0x61)));
-		// testB_2();
-		// test2();
-		
-		// test3();
-		// String ttt = "''aa''bb''cc".replaceAll("mmm", "");
-		// System.out.println(ttt);
-		// DateFormat df = new SimpleDateFormat("yyyyMMdd");
-		// try{
-		// Timestamp tm = new Timestamp(df.parse("20120302").getTime());
-		// System.out.println(tm);
-		// }catch(Exception ex){
-		// ex.printStackTrace();
-		// }
-		ImprovedNamingStrategy ts = new ImprovedNamingStrategy();
-		System.out.println(camelcasify("test_aaest"));
-		System.out.println("============"+"杨彬妍".length());
+		Connection conn = null;
+		try {
+			String path1="D:/test.accdb" ;
+// System.out.println(path);
+			Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+// 建立与数据库的连接
+			conn = DriverManager.getConnection("jdbc:odbc:driver={Microsoft Access Driver (*.accdb,*.mdb)};DBQ=" + path1);
+			Statement st =  conn.createStatement();
+			st.execute("update test set name = 'ddd'");
+			st.close();
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("链接数据库失败！！");
+		}
+//		return conn;
 	}
 
 	public static String camelcasify(String in) {

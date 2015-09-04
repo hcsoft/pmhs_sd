@@ -10,6 +10,7 @@ var app =
         'ui.grid.pagination',
         'ui.grid.selection',
         'ui.utils',
+        'cfp.loadingBar',
         'tasksystem.login',
         'tasksystem.main',
         'tasksystem.filters'
