@@ -271,7 +271,8 @@ Ext.tf.BirthCertifiQueryPanel = Ext.extend(Ext.Panel,{
 									hiddenName : 'name',
 									hasEmptyHeader : true,
 									minListWidth : 200,
-									width : 150
+									width : 150,
+									whereParam : ' where level = 2 And isOrgDepart = 0 '
 								}]
 					         },
 					         Component.createLabel('LChildBirthTitle','LChildBirthTitle',200,42,'出生日期'),
